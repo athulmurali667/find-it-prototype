@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Find It - Lost &amp; Found</title>
+    <link rel="icon" type="image/png" href="screen.png">
+
+    <!-- Tailwind CSS with Forms & Container Queries -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+
+    <!-- Custom Theme Configuration -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-error": "#690005",
+                        "surface-variant": "#353534",
+                        "primary-container": "#e3e2e2",
+                        "on-secondary-container": "#b6b5b4",
+                        background: "#131313",
+                        "surface-tint": "#c7c6c6",
+                        "surface-container-high": "#2a2a29",
+                        "surface-bright": "#393938",
+                        "on-background": "#e4e2e0",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#4a4644",
+                        "surface-container-low": "#1b1c1b",
+                        "tertiary-container": "#e9e1de",
+                        error: "#ffb4ab",
+                        "on-primary-fixed-variant": "#464747",
+                        primary: "#ffffff",
+                        "surface-container-highest": "#353534",
+                        outline: "#958f93",
+                        "tertiary-fixed": "#e9e1de",
+                        "on-primary": "#2f3031",
+                        "on-tertiary-container": "#686361",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "on-surface": "#e4e2e0",
+                        "on-primary-fixed": "#1b1c1c",
+                        "outline-variant": "#4a4549",
+                        "surface-container": "#1f201f",
+                        "on-secondary-fixed-variant": "#474747",
+                        "tertiary-fixed-dim": "#ccc5c3",
+                        secondary: "#c8c6c6",
+                        "on-tertiary-fixed": "#1e1b1a",
+                        "surface-container-lowest": "#0e0e0e",
+                        "inverse-on-surface": "#303030",
+                        "on-surface-variant": "#ccc4c9",
+                        "primary-fixed": "#e3e2e2",
+                        "on-secondary": "#303030",
+                        "inverse-primary": "#5e5e5e",
+                        tertiary: "#ffffff",
+                        "secondary-container": "#474747",
+                        "on-tertiary": "#33302e",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed-dim": "#c7c6c6",
+                        "surface-dim": "#131313",
+                        "inverse-surface": "#e4e2e0",
+                        "on-primary-container": "#646464",
+                        surface: "#131313",
+                        "secondary-fixed": "#e4e2e2"
+                    },
+                    borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"},
+                    spacing: {gutter: "16px", "margin-desktop": "24px", xs: "4px", sm: "8px", lg: "24px", md: "16px", base: "8px", "margin-mobile": "16px", xl: "48px"},
+                    fontFamily: {
+                        "body-md": ["Inter"], "headline-lg": ["Inter"], "body-lg": ["Inter"], "headline-md": ["Inter"], "headline-lg-mobile": ["Inter"], "label-sm": ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"], label: ["Inter"]
+                    },
+                    fontSize: {
+                        "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}],
+                        "headline-lg": ["32px", {lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700"}],
+                        "body-lg": ["16px", {lineHeight: "24px", fontWeight: "400"}],
+                        "headline-md": ["20px", {lineHeight: "28px", fontWeight: "600"}],
+                        "headline-lg-mobile": ["24px", {lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "700"}],
+                        "label-sm": ["12px", {lineHeight: "16px", fontWeight: "600"}]
+                    }
+                }
+            }
+        };
+    </script>
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="bg-background text-on-background antialiased selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col font-body-md">
+
+    <!-- TopNavBar (Mobile Only) -->
+    <header id="mobile-header" class="md:hidden bg-surface border-b border-outline-variant sticky top-0 z-40">
+        <div class="px-margin-mobile h-16 flex items-center justify-between py-sm">
+            <div class="flex items-center gap-sm cursor-pointer" onclick="navigateTo('home')">
+                <img alt="Find It Logo" class="w-8 h-8 rounded-lg object-cover" src="screen.png"/>
+                <span class="font-headline-md text-headline-md font-bold text-primary">Find It</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- SideNavBar (Desktop Fixed Bar for Create, Profile, Messages) -->
+    <nav id="desktop-sidebar" class="hidden md:flex flex-col p-lg gap-base bg-surface h-screen w-64 fixed left-0 top-0 border-r border-outline-variant z-30">
+        <div class="mb-lg px-xs flex items-center gap-md cursor-pointer" onclick="navigateTo('home')">
+            <img alt="Find It Logo" class="w-10 h-10 rounded-lg object-cover" src="screen.png"/>
+            <span class="font-headline-md text-headline-md font-bold text-primary">Find It</span>
+        </div>
+        <div class="flex flex-col gap-sm w-full">
+            <a data-nav="home" class="flex items-center gap-md text-primary font-bold hover:bg-surface-container-low rounded-lg transition-all cursor-pointer px-md py-sm" href="#">
+                <span class="material-symbols-outlined" data-weight="fill">home</span>
+                <span class="font-body-lg text-body-lg">Home</span>
+            </a>
+            <a data-nav="search" class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-all cursor-pointer px-md py-sm" href="#">
+                <span class="material-symbols-outlined">search</span>
+                <span class="font-body-lg text-body-lg">Search</span>
+            </a>
+            <a data-nav="messages" class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-all cursor-pointer px-md py-sm" href="#">
+                <span class="material-symbols-outlined">mail</span>
+                <span class="font-body-lg text-body-lg">Messages</span>
+            </a>
+            <a data-nav="create" class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-all cursor-pointer px-md py-sm" href="#">
+                <span class="material-symbols-outlined">add_box</span>
+                <span class="font-body-lg text-body-lg">Create</span>
+            </a>
+            <a data-nav="profile" class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-all cursor-pointer px-md py-sm" href="#">
+                <span class="material-symbols-outlined">person</span>
+                <span class="font-body-lg text-body-lg">Profile</span>
+            </a>
+            <a data-nav="admin" class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-all cursor-pointer px-md py-sm text-primary" href="#">
+                <span class="material-symbols-outlined">admin_panel_settings</span>
+                <span class="font-body-lg text-body-lg font-bold">Admin</span>
+            </a>
+        </div>
+        <div class="mt-auto flex flex-col gap-sm w-full pt-lg border-t border-outline-variant">
+            <a data-nav="login" class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-all cursor-pointer px-md py-sm" href="#">
+                <span class="material-symbols-outlined">login</span>
+                <span class="font-body-lg text-body-lg">Log In</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- BottomNavBar (Mobile Only) -->
+    <nav id="mobile-bottom-nav" class="md:hidden fixed bottom-0 left-0 w-full bg-surface border-t border-outline-variant z-40 pb-safe">
+        <div class="flex justify-around items-center h-16">
+            <a data-nav="home" class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-primary transition-colors" href="#">
+                <span class="material-symbols-outlined text-[24px]">home</span>
+            </a>
+            <a data-nav="search" class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-primary transition-colors" href="#">
+                <span class="material-symbols-outlined text-[24px]">search</span>
+            </a>
+            <a data-nav="create" class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-primary transition-colors" href="#">
+                <div class="bg-primary-container text-on-primary-container p-sm rounded-full -mt-6 shadow-lg border-4 border-surface">
+                    <span class="material-symbols-outlined text-[24px]">add</span>
+                </div>
+            </a>
+            <a data-nav="messages" class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-primary transition-colors" href="#">
+                <span class="material-symbols-outlined text-[24px]">mail</span>
+            </a>
+            <a data-nav="profile" class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-primary transition-colors" href="#">
+                <span class="material-symbols-outlined text-[24px]">person</span>
+            </a>
+            <a data-nav="admin" class="flex flex-col items-center justify-center w-full h-full text-primary hover:text-primary transition-colors" href="#">
+                <span class="material-symbols-outlined text-[24px]">admin_panel_settings</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main id="main-content" class="flex-grow w-full md:pl-64 transition-all duration-300 pb-20 md:pb-0">
+
+        <!-- ==================== 0. LOGIN VIEW ==================== -->
+        <div id="view-login" class="view-section hidden min-h-screen flex items-center justify-center py-xl px-margin-mobile">
+            <div class="w-full max-w-md bg-surface-container-low border border-surface-container rounded-xl p-lg md:p-xl shadow-lg relative overflow-hidden">
+                <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary-fixed/5 via-transparent to-transparent pointer-events-none"></div>
+                
+                <div class="relative z-10">
+                    <div class="flex justify-center mb-lg">
+                        <img alt="Find It Logo" class="w-16 h-16 rounded-lg object-cover" src="screen.png"/>
+                    </div>
+                    
+                    <h2 class="font-headline-lg text-headline-lg text-center text-on-background mb-xs">Welcome Back</h2>
+                    <p class="font-body-md text-body-md text-center text-on-surface-variant mb-xl">Sign in to report or claim items.</p>
+                    
+                    <form id="login-form" class="flex flex-col gap-md">
+                        <div class="flex flex-col gap-xs">
+                            <label for="login-email" class="font-label-sm text-label-sm uppercase text-on-surface-variant">Email</label>
+                            <input type="email" id="login-email" required placeholder="you@example.com"
+                                class="w-full bg-surface-container border border-outline-variant rounded-lg px-md py-sm text-on-surface focus:outline-none focus:border-primary-fixed focus:ring-1 focus:ring-primary-fixed transition-colors font-body-md">
+                        </div>
+                        
+                        <div class="flex flex-col gap-xs mb-sm">
+                            <div class="flex justify-between items-center">
+                                <label for="login-password" class="font-label-sm text-label-sm uppercase text-on-surface-variant">Password</label>
+                                <a href="#" class="font-label-sm text-label-sm text-primary hover:underline">Forgot?</a>
+                            </div>
+                            <input type="password" id="login-password" required placeholder="••••••••"
+                                class="w-full bg-surface-container border border-outline-variant rounded-lg px-md py-sm text-on-surface focus:outline-none focus:border-primary-fixed focus:ring-1 focus:ring-primary-fixed transition-colors font-body-md">
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-primary text-on-primary font-body-md text-body-md font-bold py-sm rounded-lg hover:opacity-90 active:scale-[0.98] transition-all">
+                            Log In
+                        </button>
+                        
+                        <button type="button" class="w-full bg-transparent border border-outline-variant text-on-surface font-body-md text-body-md font-bold py-sm rounded-lg hover:bg-surface-container transition-all">
+                            Create Account
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 1. HOME (FEED) VIEW ==================== -->
+        <div id="view-home" class="view-section active">
+            <!-- Feed Header -->
+            <div class="sticky top-0 z-20 bg-surface/80 backdrop-blur-md border-b border-outline-variant px-margin-mobile md:px-margin-desktop py-md flex justify-between items-center">
+                <h2 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg text-on-background">Activity Feed</h2>
+                <button onclick="navigateTo('profile')" class="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center hover:opacity-90 transition-all shadow-sm border border-outline-variant shrink-0 bg-surface-container-high">
+                    <img id="header-profile-avatar" src="" class="w-full h-full object-cover" alt="Profile" />
+                </button>
+            </div>
+            
+            <!-- Feed Container -->
+            <div class="py-lg px-margin-mobile md:px-margin-desktop max-w-xl mx-auto flex flex-col gap-lg" id="feed-container">
+                <!-- Feed cards will be rendered here via JS -->
+            </div>
+        </div>
+
+        <!-- ==================== 3. SEARCH & BROWSE FEED VIEW ==================== -->
+        <div id="view-search" class="view-section hidden">
+            <div class="max-w-[935px] mx-auto p-margin-mobile md:p-margin-desktop">
+                <header class="mb-lg pt-4">
+                    <h2 class="font-headline-lg text-headline-lg text-on-background">Browse &amp; Search Listings</h2>
+                    <p class="font-body-md text-body-md text-on-surface-variant mt-xs">Search reported lost or found belongings in your community.</p>
+                </header>
+
+                <!-- Search Controls & Filters -->
+                <div class="bg-surface p-md rounded-xl border border-surface-container mb-lg flex flex-col gap-md">
+                    <!-- Search Input -->
+                    <div class="relative w-full">
+                        <span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline">search</span>
+                        <input id="search-query-input" type="text" placeholder="Search by item name, location, or description..." class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg pl-10 pr-md py-sm font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary" />
+                    </div>
+
+                    <!-- Filter Controls -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-md border-t border-surface-variant pt-md">
+                        <!-- Date Range Dropdown -->
+                        <div class="flex flex-col gap-xs">
+                            <label class="font-label-sm text-label-sm uppercase text-on-surface-variant">Date Range</label>
+                            <select id="filter-date" onchange="applyFilters()" class="w-full bg-surface-container border border-outline-variant rounded-lg px-md py-sm text-on-surface focus:outline-none focus:border-primary-fixed focus:ring-1 focus:ring-primary-fixed transition-colors font-body-md">
+                                <option value="all">All Time</option>
+                                <option value="1">Last 24 Hours</option>
+                                <option value="7">Last 7 Days</option>
+                                <option value="30">Last 30 Days</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Category Dropdown -->
+                        <div class="flex flex-col gap-xs">
+                            <label class="font-label-sm text-label-sm uppercase text-on-surface-variant">Category</label>
+                            <select id="filter-category" onchange="applyFilters()" class="w-full bg-surface-container border border-outline-variant rounded-lg px-md py-sm text-on-surface focus:outline-none focus:border-primary-fixed focus:ring-1 focus:ring-primary-fixed transition-colors font-body-md">
+                                <option value="all">All Categories</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="accessories">Accessories</option>
+                                <option value="clothing">Clothing</option>
+                                <option value="documents">Documents</option>
+                                <option value="pets">Pets</option>
+                            </select>
+                        </div>
+
+                        <!-- Status Dropdown -->
+                        <div class="flex flex-col gap-xs">
+                            <label class="font-label-sm text-label-sm uppercase text-on-surface-variant">Status</label>
+                            <select id="filter-status" onchange="applyFilters()" class="w-full bg-surface-container border border-outline-variant rounded-lg px-md py-sm text-on-surface focus:outline-none focus:border-primary-fixed focus:ring-1 focus:ring-primary-fixed transition-colors font-body-md">
+                                <option value="all">All Statuses</option>
+                                <option value="lost">Lost</option>
+                                <option value="found">Found</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Counter -->
+                <div class="flex items-center justify-between mb-md">
+                    <span id="search-results-count" class="font-label-sm text-label-sm text-on-surface-variant">0 items found</span>
+                </div>
+
+                <!-- Search Grid -->
+                <div id="search-feed-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md pb-24">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ==================== 3. CREATE LISTING VIEW ==================== -->
+        <div id="view-create" class="view-section hidden">
+            <div class="max-w-[935px] mx-auto p-margin-mobile md:p-margin-desktop pt-4">
+                <header class="mb-lg">
+                    <h2 class="font-headline-lg text-headline-lg text-on-background">Create Post</h2>
+                    <p class="font-body-md text-body-md text-on-surface-variant mt-xs">Report a lost item or help return a found one.</p>
+                </header>
+
+                <div class="flex flex-col lg:flex-row gap-lg bg-surface p-lg rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-surface-container mb-24">
+                    <!-- Left: Image Drag & Drop -->
+                    <div class="w-full lg:w-5/12 flex flex-col gap-sm">
+                        <label class="font-label-sm text-label-sm text-on-surface">Photos</label>
+                        <div id="image-drop-zone" class="flex-1 min-h-[300px] lg:min-h-[400px] border-2 border-dashed border-outline-variant rounded-xl flex flex-col items-center justify-center bg-surface-container-lowest hover:bg-surface-container-low transition-colors cursor-pointer group relative overflow-hidden">
+                            <div id="image-preview-container" class="w-full h-full flex flex-col items-center justify-center p-md">
+                                <span class="material-symbols-outlined text-4xl text-outline mb-sm group-hover:text-primary transition-colors">add_photo_alternate</span>
+                                <p class="font-body-md text-body-md font-semibold text-on-surface">Drag and drop images here</p>
+                                <p class="font-label-sm text-label-sm text-outline mt-xs">or click to browse from your device</p>
+                                <p class="font-label-sm text-label-sm text-outline mt-xs">Max 4 photos (1:1 or 4:5 recommended)</p>
+                            </div>
+                            <input id="item-image-input" accept="image/*" class="hidden" type="file"/>
+                        </div>
+                    </div>
+
+                    <!-- Right: Form -->
+                    <div class="w-full lg:w-7/12 flex flex-col gap-lg">
+                        <!-- Post Type Toggle -->
+                        <fieldset>
+                            <legend class="sr-only">Select Post Type</legend>
+                            <div class="flex gap-md bg-surface-container p-xs rounded-lg">
+                                <label class="flex-1 cursor-pointer">
+                                    <input checked class="peer sr-only" name="post_type" type="radio" value="lost"/>
+                                    <div class="text-center py-sm rounded-md font-body-md text-body-md font-semibold transition-colors peer-checked:bg-surface peer-checked:text-error peer-checked:shadow-[0px_2px_4px_rgba(0,0,0,0.05)] text-on-surface-variant hover:text-on-surface">
+                                        Lost Item
+                                    </div>
+                                </label>
+                                <label class="flex-1 cursor-pointer">
+                                    <input class="peer sr-only" name="post_type" type="radio" value="found"/>
+                                    <div class="text-center py-sm rounded-md font-body-md text-body-md font-semibold transition-colors peer-checked:bg-surface peer-checked:text-primary peer-checked:shadow-[0px_2px_4px_rgba(0,0,0,0.05)] text-on-surface-variant hover:text-on-surface">
+                                        Found Item
+                                    </div>
+                                </label>
+                            </div>
+                        </fieldset>
+
+                        <div class="flex flex-col gap-md">
+                            <!-- Product Name -->
+                            <div class="flex flex-col gap-xs">
+                                <label class="font-label-sm text-label-sm text-on-surface" for="item_name">What is it?</label>
+                                <input id="item_name" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary" placeholder="e.g., iPhone 13 Pro Max, Golden Retriever" type="text"/>
+                            </div>
+
+                            <!-- Category -->
+                            <div class="flex flex-col gap-xs">
+                                <label class="font-label-sm text-label-sm text-on-surface">Category</label>
+                                <div class="flex flex-wrap gap-sm">
+                                    <label class="cursor-pointer">
+                                        <input class="peer sr-only" name="category" type="radio" value="electronics"/>
+                                        <span class="inline-flex items-center px-md py-[6px] rounded-full font-label-sm text-label-sm bg-surface-container border border-transparent text-on-surface-variant peer-checked:bg-primary-container peer-checked:text-on-primary-container transition-colors hover:bg-surface-container-high">Electronics</span>
+                                    </label>
+                                    <label class="cursor-pointer">
+                                        <input checked class="peer sr-only" name="category" type="radio" value="accessories"/>
+                                        <span class="inline-flex items-center px-md py-[6px] rounded-full font-label-sm text-label-sm bg-surface-container border border-transparent text-on-surface-variant peer-checked:bg-primary-container peer-checked:text-on-primary-container transition-colors hover:bg-surface-container-high">Accessories</span>
+                                    </label>
+                                    <label class="cursor-pointer">
+                                        <input class="peer sr-only" name="category" type="radio" value="clothing"/>
+                                        <span class="inline-flex items-center px-md py-[6px] rounded-full font-label-sm text-label-sm bg-surface-container border border-transparent text-on-surface-variant peer-checked:bg-primary-container peer-checked:text-on-primary-container transition-colors hover:bg-surface-container-high">Clothing</span>
+                                    </label>
+                                    <label class="cursor-pointer">
+                                        <input class="peer sr-only" name="category" type="radio" value="documents"/>
+                                        <span class="inline-flex items-center px-md py-[6px] rounded-full font-label-sm text-label-sm bg-surface-container border border-transparent text-on-surface-variant peer-checked:bg-primary-container peer-checked:text-on-primary-container transition-colors hover:bg-surface-container-high">Documents</span>
+                                    </label>
+                                    <label class="cursor-pointer">
+                                        <input class="peer sr-only" name="category" type="radio" value="pets"/>
+                                        <span class="inline-flex items-center px-md py-[6px] rounded-full font-label-sm text-label-sm bg-surface-container border border-transparent text-on-surface-variant peer-checked:bg-primary-container peer-checked:text-on-primary-container transition-colors hover:bg-surface-container-high">Pets</span>
+                                    </label>
+                                    <label class="cursor-pointer">
+                                        <input class="peer sr-only" name="category" type="radio" value="other"/>
+                                        <span class="inline-flex items-center px-md py-[6px] rounded-full font-label-sm text-label-sm bg-surface-container border border-transparent text-on-surface-variant peer-checked:bg-primary-container peer-checked:text-on-primary-container transition-colors hover:bg-surface-container-high">Other</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Location -->
+                            <div class="flex flex-col gap-xs">
+                                <label class="font-label-sm text-label-sm text-on-surface" for="location">Location (Last seen or Found)</label>
+                                <div class="relative">
+                                    <span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline">location_on</span>
+                                    <input id="location" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg pl-10 pr-md py-sm font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Search address, park, or landmark" type="text"/>
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="flex flex-col gap-xs">
+                                <label class="font-label-sm text-label-sm text-on-surface" for="description">Description</label>
+                                <textarea id="description" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary resize-y" placeholder="Provide detailed information about the item. Distinguishing marks, colors, context of where it was lost/found..." rows="4"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="flex items-center justify-end gap-md mt-sm pt-md border-t border-surface-variant">
+                            <button onclick="navigateTo('home')" class="px-lg py-sm font-body-md text-body-md font-semibold text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors border border-transparent" type="button">
+                                Cancel
+                            </button>
+                            <button id="submit-create-post" class="px-lg py-sm font-body-md text-body-md font-semibold bg-primary text-on-primary hover:bg-surface-tint rounded-lg transition-colors shadow-sm" type="button">
+                                Post Listing
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ==================== 4. MESSAGES VIEW ==================== -->
+        <div id="view-messages" class="view-section hidden">
+            <div class="max-w-[935px] mx-auto p-margin-mobile md:p-margin-desktop h-[calc(100vh-80px)] flex flex-col pt-4 pb-20">
+                <header class="mb-md shrink-0">
+                    <h2 class="font-headline-lg text-headline-lg text-on-background">Messages</h2>
+                    <p class="font-body-md text-body-md text-on-surface-variant mt-xs">Connect directly with owners and finders.</p>
+                </header>
+
+                <div class="flex-1 bg-surface border border-surface-container rounded-xl overflow-hidden flex flex-col md:flex-row min-h-0">
+                    <!-- Conversations Sidebar -->
+                    <div class="w-full md:w-80 border-r border-surface-variant flex flex-col overflow-y-auto no-scrollbar bg-surface-container-lowest">
+                        <div class="p-md border-b border-surface-variant flex justify-between items-center">
+                            <h3 class="font-headline-md text-headline-md text-on-background text-sm">Inbox</h3>
+                            <button onclick="clearAllMessages()" class="text-xs text-error font-label-sm font-bold hover:underline transition-all">Clear All</button>
+                        </div>
+                        <div id="conversations-list" class="p-xs flex flex-col gap-xs">
+                            <!-- Conversations rendered by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Active Chat Thread -->
+                    <div class="flex-1 flex flex-col bg-surface">
+                        <!-- Thread Header -->
+                        <div id="chat-thread-header" class="p-md border-b border-surface-variant bg-surface-container-lowest">
+                            <!-- Rendered by JS -->
+                        </div>
+
+                        <!-- Messages History -->
+                        <div id="chat-messages-history" class="flex-1 p-md overflow-y-auto no-scrollbar">
+                            <!-- Rendered by JS -->
+                        </div>
+
+                        <!-- Chat Input Bar -->
+                        <div class="p-md border-t border-surface-variant bg-surface-container-lowest flex flex-col gap-sm">
+                            <!-- Quick Replies -->
+                            <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+                                <button onclick="sendQuickReply('Is this still available?')" class="whitespace-nowrap px-sm py-xs bg-surface border border-outline-variant rounded-full font-label-sm text-label-sm text-on-surface hover:bg-surface-container-low transition-colors active:scale-95">Is this still available?</button>
+                                <button onclick="sendQuickReply('I think this might be mine!')" class="whitespace-nowrap px-sm py-xs bg-surface border border-outline-variant rounded-full font-label-sm text-label-sm text-on-surface hover:bg-surface-container-low transition-colors active:scale-95">I think this might be mine!</button>
+                                <button onclick="sendQuickReply('Where exactly did you find it?')" class="whitespace-nowrap px-sm py-xs bg-surface border border-outline-variant rounded-full font-label-sm text-label-sm text-on-surface hover:bg-surface-container-low transition-colors active:scale-95">Where exactly did you find it?</button>
+                            </div>
+                            <!-- Input -->
+                            <div class="flex items-center gap-sm">
+                                <input id="chat-input" type="text" placeholder="Type a message..." class="flex-1 bg-surface border border-outline-variant rounded-lg px-md py-sm font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary" />
+                                <button id="chat-send-btn" class="bg-primary-container text-on-primary-container p-sm rounded-lg hover:opacity-90 active:scale-95 transition-all flex items-center justify-center shrink-0">
+                                    <span class="material-symbols-outlined text-base">send</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ==================== 5. PROFILE VIEW ==================== -->
+        <div id="view-profile" class="view-section hidden">
+            <div class="max-w-[935px] mx-auto p-margin-mobile md:p-margin-desktop pt-4 pb-24">
+                <!-- Profile Header -->
+                <header class="flex flex-col md:flex-row items-start md:items-center gap-lg mb-12">
+                    <div class="w-24 h-24 md:w-36 md:h-36 rounded-full overflow-hidden shrink-0 shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border-4 border-surface bg-surface-container-high">
+                        <img id="profile-avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqdMji8MRtqjan9uJKN4VsjjGV60LTaJGgVdafL7Xfe-e3j-RqP-o09fSUWIqoJ1qLQkkeUwni-F4RvlYiKiYhWfFJZ3IO1-tgCUXA0A8xh1A97pHDzGw-DsiXOfq5Ws0Ki1qQnW4TCHSpAfF5Z0X_hWAkl9tkVmFrBMpRMv4fj9WevPn01f0fqmw2KSUqOnz9yNdr1ql-yEUz9qaQ2yRy_wrXIrBh3eWmpbLMrbnD9WZ51-ULTExO" alt="Profile avatar" />
+                    </div>
+                    <div class="flex-1 flex flex-col gap-sm">
+                        <div class="flex items-center justify-between md:justify-start gap-md w-full md:w-auto">
+                            <h1 id="profile-name" class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-background">Anna Rivera</h1>
+                            <button id="btn-edit-profile-mobile" class="md:hidden flex items-center justify-center bg-surface border border-outline-variant rounded-lg px-4 py-2 font-label-sm text-label-sm text-on-surface hover:bg-surface-container-low transition-colors">
+                                Edit Profile
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-md mt-2 md:mt-0">
+                            <span class="font-body-md text-body-md text-on-background"><span id="profile-posts-count" class="font-bold">0</span> Posts</span>
+                            <button id="btn-edit-profile-desktop" class="hidden md:flex items-center justify-center bg-surface border border-outline-variant rounded-lg px-4 py-2 font-label-sm text-label-sm text-on-surface hover:bg-surface-container-low transition-colors ml-4">
+                                Edit Profile
+                            </button>
+                        </div>
+                        <div class="mt-4 max-w-md">
+                            <p id="profile-bio" class="font-body-md text-body-md text-on-surface-variant leading-relaxed">Helping items find their way home. Los Angeles based.</p>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- User Posts Section -->
+                <div class="border-t border-surface-variant pt-lg">
+                    <h3 class="font-headline-md text-headline-md text-on-background mb-md">My Reported Posts</h3>
+                    <div id="profile-posts-grid" class="grid grid-cols-3 gap-xs md:gap-md">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+<!-- ==================== ADMIN VIEW ==================== -->
+<div id="view-admin" class="view-section hidden fixed inset-0 z-[100] bg-background text-on-surface font-body overflow-x-hidden">
+<!-- Background Shader -->
+<!-- STITCH_SHADER_START:ANIMATION_148 class="absolute inset-0 w-full h-full -z-10" -->
+<div class="absolute inset-0 w-full h-full -z-10" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_148" style="display:block;width:100%;height:100%" width="1280" height="738"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_148');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+varying vec2 v_texCoord;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+void main() {
+    vec2 uv = v_texCoord;
+    
+    // Create a subtle, flowing dark mesh/grid effect
+    float line = sin(uv.y * 50.0 + u_time * 0.5) * cos(uv.x * 50.0 - u_time * 0.5);
+    line = smoothstep(0.9, 1.0, line);
+    
+    // Dark surface colors from "Find It" palette
+    vec3 baseColor = vec3(0.07, 0.07, 0.07); // surface-container-lowest
+    vec3 accentColor = vec3(0.15, 0.15, 0.15); // subtle highlights
+    
+    vec3 color = mix(baseColor, accentColor, line * 0.3);
+    
+    // Add a very subtle vignette
+    float vignette = distance(uv, vec2(0.5));
+    color *= 1.0 - vignette * 0.5;
+    
+    gl_FragColor = vec4(color, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_148 -->
+<!-- SideNavBar -->
+<aside class="bg-surface-container dark:bg-surface-container-low h-screen w-64 flex flex-col fixed left-0 top-0 border-r border-outline-variant bg-surface-container-low z-50">
+<div class="flex flex-col h-full py-6">
+<!-- Brand -->
+<div class="px-6 mb-8 flex items-center gap-3">
+<img alt="Find It Logo" class="object-contain rounded w-12 h-12" src="https://lh3.googleusercontent.com/aida/AP1WRLuO-OUHn-GuuHP1Sl-bPBgPx8aFyns3vKzvvkxAAZ4HsztLLjekOPHeNbjrNNoXpir7T-ALaysYoV-AJ46UF0DYd4JEoDxANZlGYT2KQxJT7YHlXoyPEkrIZB_DU50nSPm1wt8hUUoUmFMXN39vSvShVBRxUflSBVwxtQTUdomevjbJZUg4dxFz7Kf8FAbwbQB7VyPZHRg0wndq8PlQ485gVTkUqq-iSkAO41MY5Sw7b1FyEBcqSArZ45k">
+<div>
+<h1 class="text-headline-md font-headline-lg font-bold text-on-surface text-xl">Find It Admin</h1>
+<p class="text-on-surface-variant text-xs mt-1">System Controller</p>
+</div>
+</div>
+<!-- Navigation -->
+<nav class="flex-1 flex flex-col gap-2 w-full font-body text-body-md">
+<a class="flex items-center gap-3 py-3 w-full text-primary font-semibold border-l-4 border-primary pl-3 bg-surface-container-highest/50 opacity-90 transition-opacity" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">dashboard</span>
+<span class="">Overview</span>
+</a>
+<a class="flex items-center gap-3 py-3 w-full text-on-surface-variant hover:text-on-surface pl-4 hover:bg-surface-container-high transition-colors duration-200" href="#" onclick="showToast('Item Reports module is coming soon!'); return false;">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="">Item Reports</span>
+</a>
+<a class="flex items-center gap-3 py-3 w-full text-on-surface-variant hover:text-on-surface pl-4 hover:bg-surface-container-high transition-colors duration-200" href="#" onclick="showToast('User Management module is coming soon!'); return false;">
+<span class="material-symbols-outlined">group</span>
+<span class="">User Management</span>
+</a>
+<a class="flex items-center gap-3 py-3 w-full text-on-surface-variant hover:text-on-surface pl-4 hover:bg-surface-container-high transition-colors duration-200" href="#" onclick="showToast('Moderation module is coming soon!'); return false;">
+<span class="material-symbols-outlined">gavel</span>
+<span class="">Moderation</span>
+</a>
+<a class="flex items-center gap-3 py-3 w-full text-on-surface-variant hover:text-on-surface pl-4 hover:bg-surface-container-high transition-colors duration-200" href="#" onclick="showToast('Settings module is coming soon!'); return false;">
+<span class="material-symbols-outlined">settings</span>
+<span class="">Settings</span>
+</a>
+</nav>
+<!-- CTA & Footer Nav -->
+<div class="px-4 mt-auto">
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-semibold mb-6 hover:bg-primary-fixed transition-colors">
+                    Generate Report
+                </button>
+<div class="flex flex-col gap-2 border-t border-outline-variant pt-4">
+<a class="flex items-center gap-3 py-2 text-on-surface-variant hover:text-on-surface px-2 hover:bg-surface-container-high rounded transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">help_outline</span>
+<span class="text-sm">Support</span>
+</a>
+<a onclick="navigateTo('home')" class="flex items-center gap-3 py-2 text-on-surface-variant hover:text-on-surface px-2 hover:bg-surface-container-high rounded transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-sm">logout</span>
+<span class="text-sm">Exit Admin</span>
+</a>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="bg-surface/80 backdrop-blur-xl docked full-width top-0 sticky z-40 border-b border-outline-variant flex justify-between items-center w-full px-6 h-16 ml-64 max-w-[calc(100%-16rem)] transition backdrop-filter duration-300">
+<div class="text-headline-md font-bold text-on-surface font-headline">Find It Console</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="bg-surface-container-high border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary text-on-surface w-64 placeholder:text-on-surface-variant" placeholder="Search reports..." type="text">
+</div>
+<button class="text-on-surface-variant hover:bg-surface-container-highest rounded-full p-2 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-highest rounded-full p-2 transition-colors">
+<span class="material-symbols-outlined">apps</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant ml-2">
+<img alt="Administrator Avatar" class="w-full h-full object-cover" data-alt="A small, professional portrait photo of an administrator used as an avatar, dark background, subtle lighting, clean aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHq7o2VR7wN8noLjd4lQah_Y-rGco-3PPeG0YHYo-8YCmyMG5nW-pWNC1SOeb3--0fK8QmkjqdabIoJFZs5d0cs7u4WqhRsx6FgX-hUkjG5qkSNs7uI72FXJuJj6XJUx7zsTPsbZ8Pja_iyP_9rvl617VyW10X1Ky0hpZ_Bzjo5k8zax0KTwmTcJQ3c5u4gRiNMxPIYsbVx9iBuYzpMcfEMjaXrndzEUWuSI1WdBWCyqlw9ADiqrRX">
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-64 p-8 max-w-7xl relative z-10">
+<div class="mb-8 fade-in-up">
+<h2 class="text-headline-lg font-headline font-bold mb-2">Dashboard Overview</h2>
+<p class="text-on-surface-variant">Real-time metrics and recent activity across the Find It network.</p>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+<div class="glass-panel p-6 rounded-xl fade-in-up delay-100 flex flex-col relative overflow-hidden">
+<div class="absolute -right-4 -top-4 text-surface-container-highest opacity-50">
+<span class="material-symbols-outlined text-8xl">list_alt</span>
+</div>
+<h3 class="text-sm font-semibold text-on-surface-variant uppercase tracking-wider mb-2 z-10">Active Listings</h3>
+<div id="admin-stat-active" class="text-4xl font-bold text-primary z-10 mb-1">1,284</div>
+<div class="text-xs text-primary flex items-center gap-1 z-10">
+<span class="material-symbols-outlined text-[14px]">trending_up</span> +5.2% this week
+                </div>
+</div>
+<div class="glass-panel p-6 rounded-xl fade-in-up delay-200 flex flex-col relative overflow-hidden">
+<div class="absolute -right-4 -top-4 text-surface-container-highest opacity-50">
+<span class="material-symbols-outlined text-8xl">handshake</span>
+</div>
+<h3 class="text-sm font-semibold text-on-surface-variant uppercase tracking-wider mb-2 z-10">Items Reconnected</h3>
+<div id="admin-stat-reconnected" class="text-4xl font-bold text-primary z-10 mb-1">856</div>
+<div class="text-xs text-on-surface-variant flex items-center gap-1 z-10">
+                    Total successful matches
+                </div>
+</div>
+<div class="glass-panel p-6 rounded-xl fade-in-up delay-300 flex flex-col relative overflow-hidden">
+<div class="absolute -right-4 -top-4 text-surface-container-highest opacity-50">
+<span class="material-symbols-outlined text-8xl">warning</span>
+</div>
+<h3 class="text-sm font-semibold text-error uppercase tracking-wider mb-2 z-10">Reported Users</h3>
+<div id="admin-stat-users" class="text-4xl font-bold text-error z-10 mb-1">12</div>
+<div class="text-xs text-on-surface-variant flex items-center gap-1 z-10">
+                    Requires moderation review
+                </div>
+</div>
+<div class="glass-panel p-6 rounded-xl fade-in-up delay-400 flex flex-col relative overflow-hidden">
+<div class="absolute -right-4 -top-4 text-surface-container-highest opacity-50">
+<span class="material-symbols-outlined text-8xl">dns</span>
+</div>
+<h3 class="text-sm font-semibold text-on-surface-variant uppercase tracking-wider mb-2 z-10">System Uptime</h3>
+<div class="text-4xl font-bold text-primary z-10 mb-1">99.9%</div>
+<div class="text-xs text-on-surface-variant flex items-center gap-1 z-10">
+                    Last 30 days
+                </div>
+</div>
+</div>
+<!-- Recent Reports Table -->
+<div class="glass-panel rounded-xl overflow-hidden fade-in-up delay-400">
+<div class="px-6 py-5 border-b border-outline-variant flex justify-between items-center bg-surface-container/50">
+<h3 class="font-headline font-semibold text-lg">Recent Reports</h3>
+<button class="text-sm text-primary hover:underline font-medium">View All</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm">
+<thead class="text-xs uppercase text-on-surface-variant bg-surface-container-low/50">
+<tr>
+<th class="px-6 py-4 font-semibold" scope="col">Item Name</th>
+<th class="px-6 py-4 font-semibold" scope="col">Category</th>
+<th class="px-6 py-4 font-semibold" scope="col">Status</th>
+<th class="px-6 py-4 font-semibold" scope="col">Date Reported</th>
+<th class="px-6 py-4 font-semibold text-right" scope="col">Action</th>
+</tr>
+</thead>
+<tbody id="admin-reports-tbody" class="divide-y divide-outline-variant/30">
+</tbody>
+</table>
+</div>
+</div>
+</main>
+</div>
+
+
+    <!-- BottomNavBar (Mobile Only) -->
+    <nav class="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center h-16 px-margin-mobile bg-surface border-t border-outline-variant shadow-[0_-4px_12px_rgba(0,0,0,0.02)]">
+        <a data-nav="home" class="flex flex-col items-center justify-center text-primary active:scale-95 transition-transform w-1/4 cursor-pointer" href="#">
+            <span class="material-symbols-outlined" data-weight="fill">home</span>
+            <span class="font-label-sm text-label-sm mt-xs">Home</span>
+        </a>
+        <a data-nav="search" class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-95 transition-transform w-1/4 cursor-pointer" href="#">
+            <span class="material-symbols-outlined">search</span>
+            <span class="font-label-sm text-label-sm mt-xs">Search</span>
+        </a>
+        <a data-nav="create" class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-95 transition-transform w-1/4 cursor-pointer" href="#">
+            <span class="material-symbols-outlined">add_box</span>
+            <span class="font-label-sm text-label-sm mt-xs">Create</span>
+        </a>
+        <a data-nav="messages" class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-95 transition-transform w-1/4 cursor-pointer" href="#">
+            <span class="material-symbols-outlined">mail</span>
+            <span class="font-label-sm text-label-sm mt-xs">Messages</span>
+        </a>
+        <a data-nav="profile" class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-95 transition-transform w-1/4 cursor-pointer" href="#">
+            <span class="material-symbols-outlined">person</span>
+            <span class="font-label-sm text-label-sm mt-xs">Profile</span>
+        </a>
+    </nav>
+
+    <!-- Desktop Footer -->
+    <footer class="hidden md:block py-md text-center border-t border-surface-variant mt-auto md:pl-64">
+        <p class="font-body-md text-body-md text-on-surface-variant">© 2026 Find It. All rights reserved.</p>
+    </footer>
+
+    <!-- ==================== MODALS ==================== -->
+
+    <!-- Item Detail Modal -->
+    <div id="item-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-md bg-background/80 backdrop-blur-sm">
+        <div id="item-modal-content" class="w-full flex justify-center">
+            <!-- Rendered by JS -->
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="edit-profile-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-md bg-background/80 backdrop-blur-sm">
+        <div class="max-w-md w-full bg-surface border border-surface-variant rounded-2xl p-lg shadow-2xl flex flex-col gap-md">
+            <h3 class="font-headline-md text-headline-md text-on-background">Edit Profile</h3>
+            
+            <div class="flex flex-col gap-xs items-center mb-sm">
+                <div class="w-24 h-24 rounded-full overflow-hidden bg-surface-container-high border-2 border-outline-variant relative group cursor-pointer" onclick="document.getElementById('edit-profile-avatar-input').click()">
+                    <img id="edit-profile-avatar-preview" src="" class="w-full h-full object-cover" alt="Avatar preview" />
+                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span class="material-symbols-outlined text-white">photo_camera</span>
+                    </div>
+                </div>
+                <input type="file" id="edit-profile-avatar-input" accept="image/*" class="hidden" />
+                <p class="font-label-sm text-label-sm text-on-surface-variant mt-xs">Tap to change picture</p>
+            </div>
+
+            <div class="flex flex-col gap-xs">
+                <label class="font-label-sm text-label-sm text-on-surface" for="edit-profile-name-input">Full Name</label>
+                <input id="edit-profile-name-input" type="text" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md text-body-md text-on-surface focus:ring-2 focus:ring-primary focus:outline-none" />
+            </div>
+            <div class="flex flex-col gap-xs">
+                <label class="font-label-sm text-label-sm text-on-surface" for="edit-profile-bio-input">Bio</label>
+                <textarea id="edit-profile-bio-input" rows="3" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md text-body-md text-on-surface focus:ring-2 focus:ring-primary focus:outline-none resize-y"></textarea>
+            </div>
+            
+            <div class="flex items-center gap-sm mt-xs">
+                <input type="checkbox" id="edit-profile-admin-checkbox" class="w-4 h-4 text-primary bg-surface border-outline-variant rounded focus:ring-primary focus:ring-2" />
+                <label for="edit-profile-admin-checkbox" class="font-body-md text-body-md text-on-surface cursor-pointer">Admin Privileges</label>
+            </div>
+
+            <div class="flex justify-end gap-sm pt-md border-t border-surface-variant mt-xs">
+                <button id="cancel-edit-profile" class="px-md py-xs rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-low">Cancel</button>
+                <button id="save-edit-profile" class="px-md py-xs rounded-lg font-body-md text-body-md bg-primary-container text-on-primary-container font-bold hover:opacity-90">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
+
+
