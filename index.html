@@ -13,7 +13,7 @@
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
 
     <!-- Custom Theme Configuration -->
     <script id="tailwind-config">
@@ -128,9 +128,9 @@
                 <span class="material-symbols-outlined">person</span>
                 <span class="font-body-lg text-body-lg">Profile</span>
             </a>
-            <a data-nav="admin" class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-all cursor-pointer px-md py-sm text-primary" href="#">
+            <a data-nav="admin" class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-all cursor-pointer px-md py-sm hidden" href="#">
                 <span class="material-symbols-outlined">admin_panel_settings</span>
-                <span class="font-body-lg text-body-lg font-bold">Admin</span>
+                <span class="font-body-lg text-body-lg">Admin</span>
             </a>
         </div>
         <div class="mt-auto flex flex-col gap-sm w-full pt-lg border-t border-outline-variant">
@@ -161,7 +161,7 @@
             <a data-nav="profile" class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-primary transition-colors" href="#">
                 <span class="material-symbols-outlined text-[24px]">person</span>
             </a>
-            <a data-nav="admin" class="flex flex-col items-center justify-center w-full h-full text-primary hover:text-primary transition-colors" href="#">
+            <a data-nav="admin" class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-on-surface transition-colors hidden" href="#">
                 <span class="material-symbols-outlined text-[24px]">admin_panel_settings</span>
             </a>
         </div>
@@ -183,7 +183,7 @@
                     <h2 class="font-headline-lg text-headline-lg text-center text-on-background mb-xs">Welcome Back</h2>
                     <p class="font-body-md text-body-md text-center text-on-surface-variant mb-xl">Sign in to report or claim items.</p>
                     
-                    <form id="login-form" class="flex flex-col gap-md">
+                    <form id="login-form" class="flex flex-col gap-md" onsubmit="handleLoginSubmit(event)">
                         <div class="flex flex-col gap-xs">
                             <label for="login-email" class="font-label-sm text-label-sm uppercase text-on-surface-variant">Email</label>
                             <input type="email" id="login-email" required placeholder="you@example.com"
@@ -193,7 +193,7 @@
                         <div class="flex flex-col gap-xs mb-sm">
                             <div class="flex justify-between items-center">
                                 <label for="login-password" class="font-label-sm text-label-sm uppercase text-on-surface-variant">Password</label>
-                                <a href="#" class="font-label-sm text-label-sm text-primary hover:underline">Forgot?</a>
+                                <a href="#" onclick="event.preventDefault(); navigateTo('forgot-password')" class="font-label-sm text-label-sm text-primary hover:underline">Forgot?</a>
                             </div>
                             <input type="password" id="login-password" required placeholder="••••••••"
                                 class="w-full bg-surface-container border border-outline-variant rounded-lg px-md py-sm text-on-surface focus:outline-none focus:border-primary-fixed focus:ring-1 focus:ring-primary-fixed transition-colors font-body-md">
@@ -203,12 +203,134 @@
                             Log In
                         </button>
                         
-                        <button type="button" class="w-full bg-transparent border border-outline-variant text-on-surface font-body-md text-body-md font-bold py-sm rounded-lg hover:bg-surface-container transition-all">
+                        <button type="button" onclick="navigateTo('create-account')" class="w-full bg-transparent border border-outline-variant text-on-surface font-body-md text-body-md font-bold py-sm rounded-lg hover:bg-surface-container transition-all">
                             Create Account
                         </button>
                     </form>
                 </div>
             </div>
+        </div>
+
+        
+        <!-- ==================== 0a. CREATE ACCOUNT VIEW ==================== -->
+        <div id="view-create-account" class="view-section hidden ambient-mesh fixed inset-0 z-[100] overflow-y-auto min-h-screen flex items-center justify-center p-margin-mobile md:p-margin-desktop antialiased">
+            <style>
+        /* Ambient subtle mesh gradient to avoid plain solid background while remaining dark */
+        .ambient-mesh {
+            background-color: #131313;
+            background-image: 
+                radial-gradient(at 20% 30%, rgba(255, 255, 255, 0.03) 0px, transparent 50%),
+                radial-gradient(at 80% 80%, rgba(255, 255, 255, 0.02) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+        
+        /* Subtle glow for the logo */
+        .logo-glow {
+            box-shadow: 0 0 24px rgba(255, 255, 255, 0.1);
+        }
+    </style>
+            <main class="w-full max-w-[420px] bg-surface-container-low/60 backdrop-blur-2xl border border-outline-variant/30 rounded-xl p-lg md:p-xl flex flex-col items-center shadow-2xl relative overflow-hidden">
+<!-- Optional edge highlight for glass effect -->
+<div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
+<!-- Brand Logo Mark -->
+<div class="mb-lg flex items-center justify-center w-14 h-14 bg-surface-container-highest rounded-full logo-glow border border-outline-variant/50">
+<img src="screen.png" alt="Find It Logo" class="w-8 h-8 object-contain">
+</div>
+<!-- Headings -->
+<div class="text-center mb-xl w-full">
+<h1 class="font-headline font-bold text-headline-lg-mobile md:text-headline-lg text-primary tracking-tight mb-xs">
+                Join Find It
+            </h1>
+<p class="text-body-md text-on-surface-variant">
+                Reconnect with what matters.
+            </p>
+</div>
+<!-- Registration Form -->
+<form id="register-form" action="#" class="w-full flex flex-col gap-md" onsubmit="handleRegisterSubmit(event)">
+<!-- Full Name Field -->
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none transition-colors group-focus-within:text-primary text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'wght' 300;">person</span>
+</div>
+<input class="block w-full pl-[44px] pr-md py-3 bg-surface-container-highest border border-outline-variant/40 rounded-lg text-body-md text-on-surface placeholder-on-surface-variant/60 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all duration-200" id="fullname" name="fullname" placeholder="Full Name" required="" type="text">
+</div>
+<!-- Email Field -->
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none transition-colors group-focus-within:text-primary text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'wght' 300;">mail</span>
+</div>
+<input class="block w-full pl-[44px] pr-md py-3 bg-surface-container-highest border border-outline-variant/40 rounded-lg text-body-md text-on-surface placeholder-on-surface-variant/60 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all duration-200" id="email" name="email" placeholder="Email Address" required="" type="email">
+</div>
+<!-- Password Field -->
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none transition-colors group-focus-within:text-primary text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'wght' 300;">lock</span>
+</div>
+<input class="block w-full pl-[44px] pr-md py-3 bg-surface-container-highest border border-outline-variant/40 rounded-lg text-body-md text-on-surface placeholder-on-surface-variant/60 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all duration-200" id="password" name="password" placeholder="Password" required="" type="password">
+</div>
+<!-- Primary CTA -->
+<button class="mt-sm w-full flex justify-center items-center py-3 px-4 bg-primary text-on-primary rounded-full font-label text-[14px] uppercase tracking-wider font-semibold hover:bg-primary-fixed-dim focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-all duration-200 active:scale-[0.98]" type="submit">
+                Create Account
+            </button>
+</form>
+<!-- Footer Link -->
+<div class="mt-xl text-center w-full pt-md border-t border-outline-variant/20">
+<p class="text-body-md text-on-surface-variant">
+                Already have an account? 
+                <a class="font-medium text-primary hover:text-primary-fixed transition-colors" href="#" onclick="event.preventDefault(); navigateTo('login')">Sign In</a>
+</p>
+</div>
+</main>
+        </div>
+
+
+        <!-- ==================== 0b. FORGOT PASSWORD VIEW ==================== -->
+        <div id="view-forgot-password" class="view-section hidden fixed inset-0 z-[100] bg-background text-on-background font-body overflow-y-auto min-h-screen antialiased">
+            <div class="relative overflow-hidden min-h-screen">
+<video autoplay="" class="absolute inset-0 w-full h-full object-cover" loop="" muted="" playsinline="">
+<source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260331_151551_992053d1-3d3e-4b8c-abac-45f22158f411.mp4" type="video/mp4">
+</video>
+<!-- Subtle dark overlay to ensure text readability -->
+<div class="absolute inset-0 bg-surface/80 backdrop-blur-sm z-0"></div>
+<div class="relative max-w-[1831px] mx-auto px-4 sm:px-6 md:px-8 py-16 sm:py-20 md:py-24 z-10 flex flex-col min-h-screen justify-center">
+<div class="w-full max-w-md mx-auto relative z-10">
+<!-- Branding -->
+<div class="text-center mb-8"><img src="screen.png" alt="Find It Logo" class="h-32 w-32 mx-auto mb-2 object-cover">
+<p class="text-on-surface-variant font-body mt-2">Reset your password to get back to finding what matters.</p></div>
+<!-- Forgot Password Card -->
+<div class="bg-surface-container-low border border-outline-variant p-6 md:p-8 rounded-[16px] shadow-2xl relative overflow-hidden">
+<!-- Glassmorphism accent -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+<h2 class="font-headline font-semibold text-headline-md text-primary mb-6">Forgot Password</h2>
+<form class="space-y-6">
+<div class="space-y-2">
+<label class="block font-label text-label-sm text-on-surface-variant uppercase tracking-wider" for="email">Email Address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">
+                                    mail
+                                </span>
+<input class="w-full bg-surface-container border border-outline-variant rounded-[16px] py-3 pl-10 pr-4 text-primary placeholder:text-on-surface-variant/50 focus:border-primary focus:ring-1 focus:ring-primary transition-colors outline-none font-body text-body-md" id="email" name="email" placeholder="your@email.com" required="" type="email">
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary font-headline font-semibold py-3 px-4 rounded-full hover:bg-primary-fixed transition-colors flex items-center justify-center gap-2 active:scale-95" type="submit">
+                            Send Reset Link
+                            <span class="material-symbols-outlined text-sm">
+                                arrow_forward
+                            </span>
+</button>
+</form>
+<div class="mt-8 text-center border-t border-outline-variant pt-6">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body text-body-sm flex items-center justify-center gap-1" href="#" onclick="event.preventDefault(); navigateTo('login')">
+<span class="material-symbols-outlined text-sm">
+                                arrow_back
+                            </span>
+                            Back to Sign In
+                        </a>
+</div>
+</div>
+</div>
+</div>
+</div>
         </div>
 
         <!-- ==================== 1. HOME (FEED) VIEW ==================== -->
@@ -467,7 +589,7 @@
                 <!-- Profile Header -->
                 <header class="flex flex-col md:flex-row items-start md:items-center gap-lg mb-12">
                     <div class="w-24 h-24 md:w-36 md:h-36 rounded-full overflow-hidden shrink-0 shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border-4 border-surface bg-surface-container-high">
-                        <img id="profile-avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqdMji8MRtqjan9uJKN4VsjjGV60LTaJGgVdafL7Xfe-e3j-RqP-o09fSUWIqoJ1qLQkkeUwni-F4RvlYiKiYhWfFJZ3IO1-tgCUXA0A8xh1A97pHDzGw-DsiXOfq5Ws0Ki1qQnW4TCHSpAfF5Z0X_hWAkl9tkVmFrBMpRMv4fj9WevPn01f0fqmw2KSUqOnz9yNdr1ql-yEUz9qaQ2yRy_wrXIrBh3eWmpbLMrbnD9WZ51-ULTExO" alt="Profile avatar" />
+                        <img id="profile-avatar" class="w-full h-full object-cover" src="https://ui-avatars.com/api/?name=Anna+Rivera&background=0D8ABC&color=fff&size=200" alt="Profile avatar" />
                     </div>
                     <div class="flex-1 flex flex-col gap-sm">
                         <div class="flex items-center justify-between md:justify-start gap-md w-full md:w-auto">
@@ -501,254 +623,385 @@
     </main>
 
 <!-- ==================== ADMIN VIEW ==================== -->
-<div id="view-admin" class="view-section hidden fixed inset-0 z-[100] bg-background text-on-surface font-body overflow-x-hidden">
-<!-- Background Shader -->
-<!-- STITCH_SHADER_START:ANIMATION_148 class="absolute inset-0 w-full h-full -z-10" -->
-<div class="absolute inset-0 w-full h-full -z-10" style="display:block;">
-<canvas id="shader-canvas-ANIMATION_148" style="display:block;width:100%;height:100%" width="1280" height="738"></canvas>
-<script>
-(function() {
-  const canvas = document.getElementById('shader-canvas-ANIMATION_148');
+<div id="view-admin" class="view-section hidden fixed inset-0 z-[100] bg-background text-on-surface overflow-hidden flex">
 
-  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
-  // This fires on initial layout and whenever the element is resized.
-  function syncSize() {
-    const w = canvas.clientWidth  || 1280;
-    const h = canvas.clientHeight || 720;
-    if (canvas.width !== w || canvas.height !== h) {
-      canvas.width  = w;
-      canvas.height = h;
-    }
-  }
-  if (typeof ResizeObserver !== 'undefined') {
-    new ResizeObserver(syncSize).observe(canvas);
-  }
-  syncSize();
+    <!-- ===== ADMIN SIDEBAR ===== -->
+    <aside class="h-screen w-64 flex-shrink-0 flex flex-col border-r border-outline-variant bg-surface-container-low z-50 overflow-y-auto sticky top-0">
+        <div class="flex flex-col h-full py-6">
+            <!-- Brand -->
+            <div class="flex items-center gap-3 px-5 mb-6">
+                <img alt="Find It Logo" class="h-9 w-9 object-contain rounded-lg bg-surface-container p-1" src="screen.png">
+                <div>
+                    <div class="font-bold text-on-surface text-base leading-tight">Find It Admin</div>
+                    <div class="text-xs text-on-surface-variant">System Controller</div>
+                </div>
+            </div>
+            <!-- Nav Links -->
+            <nav class="flex-1 flex flex-col gap-1 px-3">
+                <a class="admin-nav-link flex items-center gap-3 py-3 px-4 rounded-lg cursor-pointer transition-all duration-200 text-primary font-semibold bg-surface-container-highest/60 border-l-2 border-primary" data-section="dashboard" onclick="switchAdminSection('dashboard',this)">
+                    <span class="material-symbols-outlined text-xl" style="font-variation-settings:'FILL' 1">dashboard</span>
+                    <span class="text-sm">Dashboard</span>
+                </a>
+                <a class="admin-nav-link flex items-center gap-3 py-3 px-4 rounded-lg cursor-pointer transition-all duration-200 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high border-l-2 border-transparent" data-section="users" onclick="switchAdminSection('users',this)">
+                    <span class="material-symbols-outlined text-xl">group</span>
+                    <span class="text-sm">User Management</span>
+                </a>
+                <a class="admin-nav-link flex items-center gap-3 py-3 px-4 rounded-lg cursor-pointer transition-all duration-200 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high border-l-2 border-transparent" data-section="moderation" onclick="switchAdminSection('moderation',this)">
+                    <span class="material-symbols-outlined text-xl">gavel</span>
+                    <span class="text-sm">Listings &amp; Content Moderation</span>
+                </a>
+                <a class="admin-nav-link flex items-center gap-3 py-3 px-4 rounded-lg cursor-pointer transition-all duration-200 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high border-l-2 border-transparent" data-section="reports" onclick="switchAdminSection('reports',this)">
+                    <span class="material-symbols-outlined text-xl">security</span>
+                    <span class="text-sm">Reports &amp; Abuse Safety</span>
+                </a>
+                <a class="admin-nav-link flex items-center gap-3 py-3 px-4 rounded-lg cursor-pointer transition-all duration-200 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high border-l-2 border-transparent" data-section="settings" onclick="switchAdminSection('settings',this)">
+                    <span class="material-symbols-outlined text-xl">settings</span>
+                    <span class="text-sm">System Settings</span>
+                </a>
+            </nav>
+            <!-- Sign Out -->
+            <div class="px-3 mt-4 pt-4 border-t border-outline-variant">
+                <a class="flex items-center gap-3 py-2 px-4 rounded-lg cursor-pointer hover:bg-surface-container-high transition-colors" style="color: #ff4d4d;" onclick="handleAdminSignOut()">
+                    <span class="material-symbols-outlined text-xl">logout</span>
+                    <span class="text-sm font-medium">Sign Out</span>
+                </a>
+            </div>
+        </div>
+    </aside>
 
-  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-  if (!gl) return;
-  const vs = `attribute vec2 a_position;
-varying vec2 v_texCoord;
-void main() {
-  v_texCoord = a_position * 0.5 + 0.5;
-  gl_Position = vec4(a_position, 0.0, 1.0);
-}`;
-  const fs = `precision highp float;
-varying vec2 v_texCoord;
-uniform float u_time;
-uniform vec2 u_resolution;
-
-void main() {
-    vec2 uv = v_texCoord;
-    
-    // Create a subtle, flowing dark mesh/grid effect
-    float line = sin(uv.y * 50.0 + u_time * 0.5) * cos(uv.x * 50.0 - u_time * 0.5);
-    line = smoothstep(0.9, 1.0, line);
-    
-    // Dark surface colors from "Find It" palette
-    vec3 baseColor = vec3(0.07, 0.07, 0.07); // surface-container-lowest
-    vec3 accentColor = vec3(0.15, 0.15, 0.15); // subtle highlights
-    
-    vec3 color = mix(baseColor, accentColor, line * 0.3);
-    
-    // Add a very subtle vignette
-    float vignette = distance(uv, vec2(0.5));
-    color *= 1.0 - vignette * 0.5;
-    
-    gl_FragColor = vec4(color, 1.0);
-}`;
-  function cs(type, src) {
-    const s = gl.createShader(type);
-    gl.shaderSource(s, src);
-    gl.compileShader(s);
-    return s;
-  }
-  const prog = gl.createProgram();
-  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
-  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
-  gl.linkProgram(prog);
-  gl.useProgram(prog);
-  const buf = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
-  const pos = gl.getAttribLocation(prog, 'a_position');
-  gl.enableVertexAttribArray(pos);
-  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
-  const uTime = gl.getUniformLocation(prog, 'u_time');
-  const uRes = gl.getUniformLocation(prog, 'u_resolution');
-  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
-
-  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
-  // Shaders that need normalized coords should use: u_mouse / u_resolution.
-  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
-  window.addEventListener('mousemove', (event) => {
-    const rect = canvas.getBoundingClientRect();
-    if (rect.width && rect.height) {
-      const nx = (event.clientX - rect.left) / rect.width;
-      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
-      mouse.x = nx * canvas.width;
-      mouse.y = ny * canvas.height;
-    }
-  });
-
-  function render(t) {
-    if (typeof ResizeObserver === 'undefined') syncSize();
-    gl.viewport(0, 0, canvas.width, canvas.height);
-    if (uTime) gl.uniform1f(uTime, t * 0.001);
-    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
-    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-    requestAnimationFrame(render);
-  }
-  render(0);
-})();
-</script>
-</div>
-<!-- STITCH_SHADER_END:ANIMATION_148 -->
-<!-- SideNavBar -->
-<aside class="bg-surface-container dark:bg-surface-container-low h-screen w-64 flex flex-col fixed left-0 top-0 border-r border-outline-variant bg-surface-container-low z-50">
-<div class="flex flex-col h-full py-6">
-<!-- Brand -->
-<div class="px-6 mb-8 flex items-center gap-3">
-<img alt="Find It Logo" class="object-contain rounded w-12 h-12" src="https://lh3.googleusercontent.com/aida/AP1WRLuO-OUHn-GuuHP1Sl-bPBgPx8aFyns3vKzvvkxAAZ4HsztLLjekOPHeNbjrNNoXpir7T-ALaysYoV-AJ46UF0DYd4JEoDxANZlGYT2KQxJT7YHlXoyPEkrIZB_DU50nSPm1wt8hUUoUmFMXN39vSvShVBRxUflSBVwxtQTUdomevjbJZUg4dxFz7Kf8FAbwbQB7VyPZHRg0wndq8PlQ485gVTkUqq-iSkAO41MY5Sw7b1FyEBcqSArZ45k">
-<div>
-<h1 class="text-headline-md font-headline-lg font-bold text-on-surface text-xl">Find It Admin</h1>
-<p class="text-on-surface-variant text-xs mt-1">System Controller</p>
-</div>
-</div>
-<!-- Navigation -->
-<nav class="flex-1 flex flex-col gap-2 w-full font-body text-body-md">
-<a class="flex items-center gap-3 py-3 w-full text-primary font-semibold border-l-4 border-primary pl-3 bg-surface-container-highest/50 opacity-90 transition-opacity" href="#">
-<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">dashboard</span>
-<span class="">Overview</span>
-</a>
-<a class="flex items-center gap-3 py-3 w-full text-on-surface-variant hover:text-on-surface pl-4 hover:bg-surface-container-high transition-colors duration-200" href="#" onclick="showToast('Item Reports module is coming soon!'); return false;">
-<span class="material-symbols-outlined">inventory_2</span>
-<span class="">Item Reports</span>
-</a>
-<a class="flex items-center gap-3 py-3 w-full text-on-surface-variant hover:text-on-surface pl-4 hover:bg-surface-container-high transition-colors duration-200" href="#" onclick="showToast('User Management module is coming soon!'); return false;">
-<span class="material-symbols-outlined">group</span>
-<span class="">User Management</span>
-</a>
-<a class="flex items-center gap-3 py-3 w-full text-on-surface-variant hover:text-on-surface pl-4 hover:bg-surface-container-high transition-colors duration-200" href="#" onclick="showToast('Moderation module is coming soon!'); return false;">
-<span class="material-symbols-outlined">gavel</span>
-<span class="">Moderation</span>
-</a>
-<a class="flex items-center gap-3 py-3 w-full text-on-surface-variant hover:text-on-surface pl-4 hover:bg-surface-container-high transition-colors duration-200" href="#" onclick="showToast('Settings module is coming soon!'); return false;">
-<span class="material-symbols-outlined">settings</span>
-<span class="">Settings</span>
-</a>
-</nav>
-<!-- CTA & Footer Nav -->
-<div class="px-4 mt-auto">
-<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-semibold mb-6 hover:bg-primary-fixed transition-colors">
-                    Generate Report
+    <!-- ===== ADMIN MAIN CONTENT ===== -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden bg-background">
+        <!-- Top Header -->
+        <header class="flex-shrink-0 top-0 z-40 border-b border-outline-variant flex justify-between items-center w-full px-6 h-16 bg-surface/80 backdrop-blur-xl">
+            <div class="flex-1 max-w-xl flex items-center">
+                <div class="relative w-full">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
+                    <input id="admin-search" class="w-full bg-surface-container border border-outline-variant rounded-full py-2 pl-10 pr-4 text-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" placeholder="Search by User ID, Listing ID, or Keywords" type="text">
+                </div>
+            </div>
+            <div class="flex items-center gap-3 ml-4">
+                <div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-high rounded-full border border-outline-variant">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="text-xs text-on-surface uppercase tracking-wider font-semibold">System Healthy</span>
+                </div>
+                <button class="hover:bg-surface-container-highest rounded-full p-2 text-on-surface-variant transition-colors relative">
+                    <span class="material-symbols-outlined">notifications</span>
                 </button>
-<div class="flex flex-col gap-2 border-t border-outline-variant pt-4">
-<a class="flex items-center gap-3 py-2 text-on-surface-variant hover:text-on-surface px-2 hover:bg-surface-container-high rounded transition-colors" href="#">
-<span class="material-symbols-outlined text-sm">help_outline</span>
-<span class="text-sm">Support</span>
-</a>
-<a onclick="navigateTo('home')" class="flex items-center gap-3 py-2 text-on-surface-variant hover:text-on-surface px-2 hover:bg-surface-container-high rounded transition-colors cursor-pointer">
-<span class="material-symbols-outlined text-sm">logout</span>
-<span class="text-sm">Exit Admin</span>
-</a>
-</div>
-</div>
-</div>
-</aside>
-<!-- TopAppBar -->
-<header class="bg-surface/80 backdrop-blur-xl docked full-width top-0 sticky z-40 border-b border-outline-variant flex justify-between items-center w-full px-6 h-16 ml-64 max-w-[calc(100%-16rem)] transition backdrop-filter duration-300">
-<div class="text-headline-md font-bold text-on-surface font-headline">Find It Console</div>
-<div class="flex items-center gap-4">
-<div class="relative">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-<input class="bg-surface-container-high border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary text-on-surface w-64 placeholder:text-on-surface-variant" placeholder="Search reports..." type="text">
-</div>
-<button class="text-on-surface-variant hover:bg-surface-container-highest rounded-full p-2 transition-colors">
-<span class="material-symbols-outlined">notifications</span>
-</button>
-<button class="text-on-surface-variant hover:bg-surface-container-highest rounded-full p-2 transition-colors">
-<span class="material-symbols-outlined">apps</span>
-</button>
-<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant ml-2">
-<img alt="Administrator Avatar" class="w-full h-full object-cover" data-alt="A small, professional portrait photo of an administrator used as an avatar, dark background, subtle lighting, clean aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHq7o2VR7wN8noLjd4lQah_Y-rGco-3PPeG0YHYo-8YCmyMG5nW-pWNC1SOeb3--0fK8QmkjqdabIoJFZs5d0cs7u4WqhRsx6FgX-hUkjG5qkSNs7uI72FXJuJj6XJUx7zsTPsbZ8Pja_iyP_9rvl617VyW10X1Ky0hpZ_Bzjo5k8zax0KTwmTcJQ3c5u4gRiNMxPIYsbVx9iBuYzpMcfEMjaXrndzEUWuSI1WdBWCyqlw9ADiqrRX">
-</div>
-</div>
-</header>
-<!-- Main Content -->
-<main class="ml-64 p-8 max-w-7xl relative z-10">
-<div class="mb-8 fade-in-up">
-<h2 class="text-headline-lg font-headline font-bold mb-2">Dashboard Overview</h2>
-<p class="text-on-surface-variant">Real-time metrics and recent activity across the Find It network.</p>
-</div>
-<!-- Stats Grid -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-<div class="glass-panel p-6 rounded-xl fade-in-up delay-100 flex flex-col relative overflow-hidden">
-<div class="absolute -right-4 -top-4 text-surface-container-highest opacity-50">
-<span class="material-symbols-outlined text-8xl">list_alt</span>
-</div>
-<h3 class="text-sm font-semibold text-on-surface-variant uppercase tracking-wider mb-2 z-10">Active Listings</h3>
-<div id="admin-stat-active" class="text-4xl font-bold text-primary z-10 mb-1">1,284</div>
-<div class="text-xs text-primary flex items-center gap-1 z-10">
-<span class="material-symbols-outlined text-[14px]">trending_up</span> +5.2% this week
+                <button onclick="window.openAdminProfileModal()" class="w-9 h-9 rounded-full overflow-hidden border-2 border-outline-variant hover:border-primary transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary">
+                    <img id="admin-header-avatar" alt="Admin" class="w-full h-full object-cover" src="screen.png">
+                </button>
+            </div>
+        </header>
+
+        <!-- Admin Profile Modal -->
+        <div id="admin-profile-modal" class="fixed inset-0 z-[200] hidden items-center justify-center p-4">
+            <!-- Backdrop -->
+            <div class="absolute inset-0 bg-background/80 backdrop-blur-sm" onclick="window.closeAdminProfileModal()"></div>
+            
+            <!-- Modal Content -->
+            <div class="relative w-full max-w-sm bg-surface-container-high rounded-2xl shadow-2xl p-6 flex flex-col border border-outline-variant/30 transform scale-95 opacity-0 transition-all duration-300" id="admin-profile-modal-content">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-headline font-bold text-xl text-on-surface">Edit Admin Profile</h3>
+                    <button onclick="window.closeAdminProfileModal()" class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
                 </div>
-</div>
-<div class="glass-panel p-6 rounded-xl fade-in-up delay-200 flex flex-col relative overflow-hidden">
-<div class="absolute -right-4 -top-4 text-surface-container-highest opacity-50">
-<span class="material-symbols-outlined text-8xl">handshake</span>
-</div>
-<h3 class="text-sm font-semibold text-on-surface-variant uppercase tracking-wider mb-2 z-10">Items Reconnected</h3>
-<div id="admin-stat-reconnected" class="text-4xl font-bold text-primary z-10 mb-1">856</div>
-<div class="text-xs text-on-surface-variant flex items-center gap-1 z-10">
-                    Total successful matches
+                
+                <div class="flex flex-col gap-4">
+                    <!-- Avatar Upload -->
+                    <div class="flex flex-col items-center gap-3 mb-2">
+                        <div class="w-20 h-20 rounded-full overflow-hidden bg-surface-container border border-outline-variant relative group">
+                            <img id="admin-edit-avatar-preview" src="screen.png" class="w-full h-full object-cover">
+                            <label class="absolute inset-0 bg-black/50 hidden group-hover:flex items-center justify-center cursor-pointer transition-all">
+                                <span class="material-symbols-outlined text-white">photo_camera</span>
+                                <input type="file" id="admin-edit-avatar-input" class="hidden" accept="image/*" onchange="window.handleAdminAvatarSelect(event)">
+                            </label>
+                        </div>
+                        <span class="text-xs text-on-surface-variant">Click to change</span>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1.5">Full Name</label>
+                        <input type="text" id="admin-edit-name" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-3 py-2 text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                    </div>
+                    
+                    <button onclick="window.saveAdminProfile()" class="w-full py-2.5 mt-2 bg-primary text-on-primary font-bold rounded-lg hover:bg-primary-fixed transition-colors">
+                        Save Changes
+                    </button>
                 </div>
-</div>
-<div class="glass-panel p-6 rounded-xl fade-in-up delay-300 flex flex-col relative overflow-hidden">
-<div class="absolute -right-4 -top-4 text-surface-container-highest opacity-50">
-<span class="material-symbols-outlined text-8xl">warning</span>
-</div>
-<h3 class="text-sm font-semibold text-error uppercase tracking-wider mb-2 z-10">Reported Users</h3>
-<div id="admin-stat-users" class="text-4xl font-bold text-error z-10 mb-1">12</div>
-<div class="text-xs text-on-surface-variant flex items-center gap-1 z-10">
-                    Requires moderation review
+            </div>
+        </div>
+
+        <!-- Scrollable content area -->
+        <div class="flex-1 overflow-y-auto">
+
+            <!-- ===== SECTION: DASHBOARD ===== -->
+            <section id="admin-section-dashboard" class="admin-section p-6 lg:p-8 space-y-8 max-w-7xl mx-auto w-full">
+                <div>
+                    <h1 class="font-bold text-on-surface text-3xl">Dashboard Overview</h1>
+                    <p class="text-on-surface-variant text-sm mt-1">Real-time metrics and recent activity across the Find It network.</p>
                 </div>
-</div>
-<div class="glass-panel p-6 rounded-xl fade-in-up delay-400 flex flex-col relative overflow-hidden">
-<div class="absolute -right-4 -top-4 text-surface-container-highest opacity-50">
-<span class="material-symbols-outlined text-8xl">dns</span>
-</div>
-<h3 class="text-sm font-semibold text-on-surface-variant uppercase tracking-wider mb-2 z-10">System Uptime</h3>
-<div class="text-4xl font-bold text-primary z-10 mb-1">99.9%</div>
-<div class="text-xs text-on-surface-variant flex items-center gap-1 z-10">
-                    Last 30 days
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+                    <div class="bg-surface-container-low border border-outline-variant rounded-xl p-5 flex flex-col gap-2 relative overflow-hidden group hover:border-outline transition-colors">
+                        <div class="absolute inset-0 bg-gradient-to-br from-surface-container-high to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="flex justify-between items-start z-10">
+                            <span class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Active Listings</span>
+                            <span class="material-symbols-outlined text-on-surface-variant text-lg">list_alt</span>
+                        </div>
+                        <div class="z-10">
+                            <h3 id="admin-stat-active" class="font-bold text-on-surface text-4xl">0</h3>
+                            <p class="text-sm text-emerald-400 flex items-center gap-1 mt-1">
+                                <span class="material-symbols-outlined text-sm">trending_up</span> +8% this week
+                            </p>
+                        </div>
+                    </div>
+                    <div class="bg-surface-container-low border border-error-container/40 rounded-xl p-5 flex flex-col gap-2 relative overflow-hidden group hover:border-error-container/70 transition-colors">
+                        <div class="absolute inset-0 bg-gradient-to-br from-error-container/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="flex justify-between items-start z-10">
+                            <span class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Pending Mod</span>
+                            <span class="material-symbols-outlined text-error text-lg">gavel</span>
+                        </div>
+                        <div class="z-10">
+                            <h3 id="admin-stat-pending" class="font-bold text-on-surface text-4xl">0</h3>
+                            <p class="text-sm text-error flex items-center gap-1 mt-1">
+                                <span class="material-symbols-outlined text-sm">warning</span> Needs Review
+                            </p>
+                        </div>
+                    </div>
+                    <div class="bg-surface-container-low border border-outline-variant rounded-xl p-5 flex flex-col gap-2 relative overflow-hidden group hover:border-outline transition-colors">
+                        <div class="absolute inset-0 bg-gradient-to-br from-surface-container-high to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="flex justify-between items-start z-10">
+                            <span class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Total Users</span>
+                            <span class="material-symbols-outlined text-on-surface-variant text-lg">group</span>
+                        </div>
+                        <div class="z-10">
+                            <h3 id="admin-stat-users" class="font-bold text-on-surface text-4xl">0</h3>
+                            <p class="text-sm text-emerald-400 flex items-center gap-1 mt-1">
+                                <span class="material-symbols-outlined text-sm">trending_up</span> +12%
+                            </p>
+                        </div>
+                    </div>
+                    <div class="bg-surface-container-low border border-outline-variant rounded-xl p-5 flex flex-col gap-2 relative overflow-hidden group hover:border-outline transition-colors">
+                        <div class="absolute inset-0 bg-gradient-to-br from-surface-container-high to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="flex justify-between items-start z-10">
+                            <span class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Active Scams</span>
+                            <span class="material-symbols-outlined text-on-surface-variant text-lg">security</span>
+                        </div>
+                        <div class="z-10">
+                            <h3 id="admin-stat-scams" class="font-bold text-on-surface text-4xl">0</h3>
+                            <p class="text-sm text-on-surface-variant flex items-center gap-1 mt-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-error inline-block"></span> 12 Unresolved
+                            </p>
+                        </div>
+                    </div>
                 </div>
-</div>
-</div>
-<!-- Recent Reports Table -->
-<div class="glass-panel rounded-xl overflow-hidden fade-in-up delay-400">
-<div class="px-6 py-5 border-b border-outline-variant flex justify-between items-center bg-surface-container/50">
-<h3 class="font-headline font-semibold text-lg">Recent Reports</h3>
-<button class="text-sm text-primary hover:underline font-medium">View All</button>
-</div>
-<div class="overflow-x-auto">
-<table class="w-full text-left text-sm">
-<thead class="text-xs uppercase text-on-surface-variant bg-surface-container-low/50">
-<tr>
-<th class="px-6 py-4 font-semibold" scope="col">Item Name</th>
-<th class="px-6 py-4 font-semibold" scope="col">Category</th>
-<th class="px-6 py-4 font-semibold" scope="col">Status</th>
-<th class="px-6 py-4 font-semibold" scope="col">Date Reported</th>
-<th class="px-6 py-4 font-semibold text-right" scope="col">Action</th>
-</tr>
-</thead>
-<tbody id="admin-reports-tbody" class="divide-y divide-outline-variant/30">
-</tbody>
-</table>
-</div>
-</div>
-</main>
-</div>
+                <!-- Moderation Queue Table -->
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h2 class="font-semibold text-on-surface text-xl">Listing Moderation Queue</h2>
+                        <div class="flex gap-2">
+                            <button class="bg-surface-container border border-outline-variant text-sm text-on-surface rounded-full px-4 py-1.5 hover:bg-surface-container-high transition-colors">Category: All</button>
+                            <button class="bg-surface-container border border-outline-variant text-sm text-on-surface rounded-full px-4 py-1.5 hover:bg-surface-container-high transition-colors">Status: Pending Review</button>
+                            <button class="bg-surface-container border border-outline-variant text-sm text-on-surface rounded-full px-4 py-1.5 hover:bg-surface-container-high transition-colors">Sort: Oldest First</button>
+                        </div>
+                    </div>
+                    <div class="bg-surface-container-low border border-outline-variant rounded-xl overflow-hidden">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-surface-container border-b border-outline-variant text-xs text-on-surface-variant uppercase tracking-wider">
+                                <tr>
+                                    <th class="px-6 py-4 font-semibold">Listing</th>
+                                    <th class="px-6 py-4 font-semibold">Category</th>
+                                    <th class="px-6 py-4 font-semibold">User &amp; Value</th>
+                                    <th class="px-6 py-4 font-semibold">Risk Assessment</th>
+                                    <th class="px-6 py-4 font-semibold text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-reports-tbody" class="divide-y divide-outline-variant">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== SECTION: USER MANAGEMENT ===== -->
+            <section id="admin-section-users" class="admin-section hidden p-6 lg:p-8 max-w-7xl mx-auto w-full">
+                <div class="mb-8 flex justify-between items-end">
+                    <div>
+                        <h2 class="font-bold text-on-surface text-3xl tracking-tight mb-2">Flagged Users</h2>
+                        <p class="text-on-surface-variant">Review accounts with multiple violation reports.</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="bg-surface-container-high border border-outline-variant px-4 py-2 rounded-lg text-sm font-medium text-on-surface flex items-center gap-2 hover:bg-surface-container-highest transition-colors">
+                            <span class="material-symbols-outlined text-lg">filter_list</span> Filter
+                        </button>
+                        <button class="bg-surface-container-high border border-outline-variant px-4 py-2 rounded-lg text-sm font-medium text-on-surface flex items-center gap-2 hover:bg-surface-container-highest transition-colors">
+                            <span class="material-symbols-outlined text-lg">sort</span> Sort by Risk
+                        </button>
+                    </div>
+                </div>
+                <div id="admin-users-container" class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                    <!-- Users will be injected here by app2.js -->
+                </div>
+            </section>
+
+            <!-- ===== SECTION: MODERATION QUEUE ===== -->
+            <section id="admin-section-moderation" class="admin-section hidden p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+                <div>
+                    <h2 class="font-bold text-on-surface text-3xl">Moderation Queue</h2>
+                    <p class="text-on-surface-variant mt-1">Review and take action on flagged content.</p>
+                </div>
+                <!-- Tabs -->
+                <div class="flex items-center gap-6 border-b border-outline-variant">
+                    <button class="pb-3 text-sm font-semibold text-primary border-b-2 border-primary">All</button>
+                    <button class="pb-3 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">Items</button>
+                    <button class="pb-3 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">Comments</button>
+                    <button class="pb-3 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">Messages</button>
+                </div>
+                <!-- Cards Grid -->
+                <div id="admin-moderation-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Moderation items will be injected here by app2.js -->
+                </div>
+            </section>
+
+            <!-- ===== SECTION: REPORTS & ABUSE SAFETY ===== -->
+            <section id="admin-section-reports" class="admin-section hidden p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+                <div>
+                    <h2 class="font-bold text-on-surface text-3xl">Reports &amp; Abuse Safety</h2>
+                    <p class="text-on-surface-variant mt-1">Detailed report review and investigation tools.</p>
+                </div>
+                <!-- Report Detail Card -->
+                <div id="admin-reports-container" class="grid grid-cols-1 gap-6">
+                    <!-- Reports will be injected here by app2.js -->
+                </div>
+            </section>
+
+            <!-- ===== SECTION: SYSTEM SETTINGS ===== -->
+            <section id="admin-section-settings" class="admin-section hidden p-6 lg:p-8 max-w-5xl mx-auto w-full space-y-6">
+                <h2 class="font-bold text-on-surface text-3xl">Settings</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Left col -->
+                    <div class="lg:col-span-2 flex flex-col gap-6">
+                        <section class="bg-surface-container rounded-xl p-6 border border-outline-variant">
+                            <h3 class="font-semibold text-on-surface text-lg mb-5">General Configuration</h3>
+                            <div class="flex flex-col gap-4">
+                                <div>
+                                    <label class="block text-xs text-on-surface-variant mb-1.5 uppercase font-semibold tracking-wider">System Name</label>
+                                    <input id="setting-system-name" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2.5 text-sm text-on-surface focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" type="text" value="Find It Production">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-on-surface-variant mb-1.5 uppercase font-semibold tracking-wider">Contact Email</label>
+                                    <input id="setting-contact-email" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2.5 text-sm text-on-surface focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" type="email" value="admin@findit.app">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-on-surface-variant mb-1.5 uppercase font-semibold tracking-wider">Timezone</label>
+                                    <select id="setting-timezone" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2.5 text-sm text-on-surface focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all">
+                                        <option>UTC (Coordinated Universal Time)</option>
+                                        <option>EST (Eastern Standard Time)</option>
+                                        <option>IST (India Standard Time)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </section>
+                        <section class="bg-surface-container rounded-xl p-6 border border-outline-variant">
+                            <h3 class="font-semibold text-on-surface text-lg mb-5">Moderation Thresholds</h3>
+                            <div class="flex flex-col gap-6">
+                                <div>
+                                    <div class="flex justify-between items-end mb-2">
+                                        <label class="text-xs text-on-surface-variant uppercase font-semibold tracking-wider">Auto-flagging Sensitivity (Spam)</label>
+                                        <span id="setting-spam-val" class="text-xs text-on-surface font-medium">85%</span>
+                                    </div>
+                                    <input id="setting-spam" oninput="document.getElementById('setting-spam-val').textContent = this.value + '%'" class="w-full h-2 bg-surface-container-low rounded-lg appearance-none cursor-pointer accent-primary" max="100" min="0" type="range" value="85">
+                                </div>
+                                <div>
+                                    <div class="flex justify-between items-end mb-2">
+                                        <label class="text-xs text-on-surface-variant uppercase font-semibold tracking-wider">Auto-flagging Sensitivity (NSFW)</label>
+                                        <span id="setting-nsfw-val" class="text-xs text-on-surface font-medium">95%</span>
+                                    </div>
+                                    <input id="setting-nsfw" oninput="document.getElementById('setting-nsfw-val').textContent = this.value + '%'" class="w-full h-2 bg-surface-container-low rounded-lg appearance-none cursor-pointer accent-primary" max="100" min="0" type="range" value="95">
+                                </div>
+                            </div>
+                        </section>
+                        <!-- Save buttons -->
+                        <div class="flex justify-end gap-3 pt-2 border-t border-outline-variant">
+                            <button onclick="renderAdminSettings()" class="px-6 py-2.5 rounded-full border border-outline-variant text-on-surface text-sm hover:bg-surface-container-high transition-colors">Discard Changes</button>
+                            <button onclick="adminSaveSettings()" class="px-6 py-2.5 rounded-full bg-primary text-on-primary text-sm font-semibold hover:bg-primary-fixed transition-colors">Save Configuration</button>
+                        </div>
+                    </div>
+                    <!-- Right col -->
+                    <div class="flex flex-col gap-6">
+                        <section class="bg-surface-container rounded-xl p-6 border border-outline-variant">
+                            <h3 class="font-semibold text-on-surface text-lg mb-4">Security</h3>
+                            <div class="flex justify-between items-start mb-4 pb-4 border-b border-outline-variant">
+                                <div>
+                                    <p class="font-medium text-on-surface text-sm">Two-Factor Authentication</p>
+                                    <p class="text-xs text-on-surface-variant mt-0.5">Enforce 2FA for all admins</p>
+                                </div>
+                                <div class="w-10 h-6 bg-primary rounded-full relative cursor-pointer flex-shrink-0">
+                                    <div class="absolute right-1 top-1 w-4 h-4 bg-on-primary rounded-full"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-on-surface-variant mb-1.5 uppercase font-semibold tracking-wider">Session Timeout (Minutes)</label>
+                                <input class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2.5 text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary" type="number" value="30">
+                            </div>
+                        </section>
+                        <section class="bg-surface-container rounded-xl p-6 border border-outline-variant">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="font-semibold text-on-surface text-lg">Roles &amp; Permissions</h3>
+                                <button class="text-primary text-sm font-medium hover:underline">Add Role</button>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-center py-2 border-b border-outline-variant/50">
+                                    <div><p class="font-medium text-on-surface text-sm">Super Admin</p><p class="text-xs text-on-surface-variant">Full system access</p></div>
+                                    <button class="text-xs text-primary hover:underline">Edit</button>
+                                </div>
+                                <div class="flex justify-between items-center py-2 border-b border-outline-variant/50">
+                                    <div><p class="font-medium text-on-surface text-sm">Moderator</p><p class="text-xs text-on-surface-variant">Manage reports &amp; items</p></div>
+                                    <button class="text-xs text-primary hover:underline">Edit</button>
+                                </div>
+                                <div class="flex justify-between items-center py-2">
+                                    <div><p class="font-medium text-on-surface text-sm">Support Agent</p><p class="text-xs text-on-surface-variant">View user tickets</p></div>
+                                    <button class="text-xs text-primary hover:underline">Edit</button>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+
+        </div><!-- end scrollable -->
+    </div><!-- end main content -->
+</div><!-- end view-admin -->
+
+<script>
+function switchAdminSection(section, clickedLink) {
+    // Hide all sections
+    document.querySelectorAll('.admin-section').forEach(s => s.classList.add('hidden'));
+    // Show selected
+    var target = document.getElementById('admin-section-' + section);
+    if (target) target.classList.remove('hidden');
+    // Update nav styles
+    document.querySelectorAll('.admin-nav-link').forEach(function(link) {
+        link.classList.remove('text-primary', 'font-semibold', 'bg-surface-container-highest/60', 'border-primary');
+        link.classList.add('text-on-surface-variant', 'border-transparent');
+    });
+    if (clickedLink) {
+        clickedLink.classList.add('text-primary', 'font-semibold', 'bg-surface-container-highest/60', 'border-primary');
+        clickedLink.classList.remove('text-on-surface-variant', 'border-transparent');
+    }
+    
+    // Call specific render functions based on the section
+    if (section === 'users' && window.renderAdminUsers) window.renderAdminUsers();
+    if (section === 'moderation' && window.renderAdminModeration) window.renderAdminModeration();
+    if (section === 'reports' && window.renderAdminReports) window.renderAdminReports();
+    if (section === 'settings' && window.renderAdminSettings) window.renderAdminSettings();
+}
+
+function handleAdminSignOut() {
+    localStorage.removeItem('findit_current_user');
+    location.reload();
+}
+</script>
+
 
 
     <!-- BottomNavBar (Mobile Only) -->
@@ -814,10 +1067,7 @@ void main() {
                 <textarea id="edit-profile-bio-input" rows="3" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md text-body-md text-on-surface focus:ring-2 focus:ring-primary focus:outline-none resize-y"></textarea>
             </div>
             
-            <div class="flex items-center gap-sm mt-xs">
-                <input type="checkbox" id="edit-profile-admin-checkbox" class="w-4 h-4 text-primary bg-surface border-outline-variant rounded focus:ring-primary focus:ring-2" />
-                <label for="edit-profile-admin-checkbox" class="font-body-md text-body-md text-on-surface cursor-pointer">Admin Privileges</label>
-            </div>
+
 
             <div class="flex justify-end gap-sm pt-md border-t border-surface-variant mt-xs">
                 <button id="cancel-edit-profile" class="px-md py-xs rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-low">Cancel</button>
@@ -827,8 +1077,112 @@ void main() {
     </div>
 
     <!-- Scripts -->
-    <script src="js/data.js"></script>
-    <script src="js/app.js"></script>
+
+    <!-- Inline auth handlers - bypass all caching issues -->
+    <script>
+        async function handleLoginSubmit(e) {
+            e.preventDefault();
+            var form = document.getElementById('login-form');
+            var email = form.querySelector('input[type="email"]').value.trim();
+            var password = form.querySelector('input[type="password"]').value;
+            console.log('[Login] Sending:', email, password ? '(password set)' : '(no password)');
+            if (!email || !password) {
+                alert('Please enter your email and password.');
+                return;
+            }
+            try {
+                var res = await fetch('/api/users/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email, password: password })
+                });
+                var data = await res.json();
+                console.log('[Login] Response:', res.status, data);
+                if (res.ok && data.success) {
+                    localStorage.setItem('findit_current_user', JSON.stringify(data.user));
+                    if (data.user.isAdmin === 1 || data.user.isAdmin === true) {
+                        // Admin: go straight to admin dashboard
+                        location.href = '/?admin=1';
+                    } else {
+                        location.reload();
+                    }
+                } else {
+                    alert('Login failed: ' + (data.error || 'Invalid email or password'));
+                }
+            } catch (err) {
+                console.error('[Login] Error:', err);
+                alert('Network error. Is the backend running at http://localhost:3000 ?');
+            }
+        }
+
+        async function handleRegisterSubmit(e) {
+            e.preventDefault();
+            var form = document.getElementById('register-form');
+            var name = form.querySelector('input[name="fullname"]').value.trim();
+            var email = form.querySelector('input[name="email"]').value.trim();
+            var password = form.querySelector('input[name="password"]').value;
+            console.log('[Register] Sending:', name, email, password ? '(password set)' : '(no password)');
+            if (!email || !password) {
+                alert('Please enter your email and password.');
+                return;
+            }
+            try {
+                var res = await fetch('/api/users/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: name, email: email, password: password })
+                });
+                var data = await res.json();
+                console.log('[Register] Response:', res.status, data);
+                if (res.ok && data.success) {
+                    localStorage.setItem('findit_current_user', JSON.stringify(data.user));
+                    // Show success modal
+                    var modal = document.getElementById('registration-success-modal');
+                    var content = document.getElementById('success-modal-content');
+                    if (modal && content) {
+                        modal.classList.remove('hidden');
+                        modal.classList.add('flex');
+                        setTimeout(function() {
+                            content.classList.remove('scale-95', 'opacity-0');
+                            content.classList.add('scale-100', 'opacity-100');
+                        }, 10);
+                    } else {
+                        location.reload();
+                    }
+                    window.closeSuccessModal = function() {
+                        if (modal) modal.classList.add('hidden');
+                        location.reload();
+                    };
+                } else {
+                    alert('Registration failed: ' + (data.error || 'Unknown error'));
+                }
+            } catch (err) {
+                console.error('[Register] Error:', err);
+                alert('Network error. Is the backend running?');
+            }
+        }
+    </script>
+    <script src="js/app2.js?v=3"></script>
+    <!-- Registration Success Modal -->
+    <div id="registration-success-modal" class="fixed inset-0 z-[200] hidden items-center justify-center p-4">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-background/80 backdrop-blur-sm" onclick="closeSuccessModal()"></div>
+        
+        <!-- Modal Content -->
+        <div class="relative w-full max-w-sm bg-surface-container-high rounded-2xl shadow-2xl p-8 flex flex-col items-center text-center border border-outline-variant/30 transform scale-95 opacity-0 transition-all duration-300" id="success-modal-content">
+            <!-- Green Circle with White Checkmark -->
+            <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mb-6 shadow-lg shadow-green-500/20">
+                <span class="material-symbols-outlined text-white text-5xl" style="font-variation-settings: 'wght' 600;">check</span>
+            </div>
+            
+            <h2 class="font-headline font-bold text-2xl text-on-surface mb-2">Account Created!</h2>
+            <p class="font-body text-on-surface-variant mb-8">Your account has been successfully created. You can now access all features.</p>
+            
+            <button onclick="closeSuccessModal()" class="w-full py-3 px-4 bg-primary text-on-primary rounded-full font-label font-bold uppercase tracking-wider hover:bg-primary-fixed-dim transition-colors">
+                Continue
+            </button>
+        </div>
+    </div>
 </body>
 </html>
 

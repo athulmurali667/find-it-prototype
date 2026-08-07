@@ -1,0 +1,258 @@
+<!DOCTYPE html><html class="dark" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Find It Admin - Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#e3e2e2",
+                        "surface-variant": "#353534",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "secondary-fixed": "#e4e2e2",
+                        "surface-container": "#1f201f",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "surface-container-high": "#2a2a29",
+                        "tertiary-container": "#e9e1de",
+                        "surface-dim": "#131313",
+                        "on-surface": "#e4e2e0",
+                        "on-background": "#e4e2e0",
+                        "tertiary-fixed": "#e9e1de",
+                        "on-primary": "#2f3031",
+                        "inverse-primary": "#5e5e5e",
+                        "outline-variant": "#4a4549",
+                        "secondary": "#c8c6c6",
+                        "on-primary-container": "#646464",
+                        "on-tertiary-fixed-variant": "#4a4644",
+                        "surface-tint": "#c7c6c6",
+                        "tertiary": "#ffffff",
+                        "inverse-on-surface": "#303030",
+                        "on-secondary-container": "#b6b5b4",
+                        "surface-bright": "#393938",
+                        "surface-container-highest": "#353534",
+                        "on-secondary": "#303030",
+                        "inverse-surface": "#e4e2e0",
+                        "error": "#ffb4ab",
+                        "error-container": "#93000a",
+                        "primary-fixed-dim": "#c7c6c6",
+                        "tertiary-fixed-dim": "#ccc5c3",
+                        "on-secondary-fixed-variant": "#474747",
+                        "background": "#131313",
+                        "on-surface-variant": "#ccc4c9",
+                        "surface": "#131313",
+                        "surface-container-lowest": "#0e0e0e",
+                        "outline": "#958f93",
+                        "on-error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#464747",
+                        "surface-container-low": "#1b1c1b",
+                        "on-tertiary": "#33302e",
+                        "primary": "#ffffff",
+                        "on-tertiary-fixed": "#1e1b1a",
+                        "primary-container": "#e3e2e2",
+                        "secondary-container": "#474747",
+                        "on-error": "#690005",
+                        "on-tertiary-container": "#686361",
+                        "on-primary-fixed": "#1b1c1c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.5rem",
+                        "sm": "0.25rem",
+                        "md": "0.75rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "lg": "24px",
+                        "xl": "48px",
+                        "gutter": "16px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "24px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "display": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface flex min-h-screen font-body">
+<!-- SideNavBar (from JSON) -->
+<nav class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 bg-surface-dim border-r border-outline-variant z-50">
+<div class="p-lg flex items-center gap-md">
+<div>
+<h1 class="text-headline-md font-bold text-on-surface">Admin Console</h1>
+<p class="text-label-sm text-on-surface-variant font-medium">System Control</p>
+</div>
+</div>
+<ul class="flex flex-col mt-md flex-1 font-body text-body-md">
+<li class="cursor-pointer group flex items-center gap-md px-lg py-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="">Dashboard</span>
+</li>
+<li class="cursor-pointer group flex items-center gap-md px-lg py-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="">User Management</span>
+</li>
+<li class="cursor-pointer group flex items-center gap-md px-lg py-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined" data-icon="gavel">gavel</span>
+<span class="">Listings &amp; Content Moderation</span>
+</li>
+
+<li class="cursor-pointer group flex items-center gap-md px-lg py-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined" data-icon="report">report</span>
+<span class="">Reports &amp; Abuse Safety</span>
+</li>
+<li class="cursor-pointer group flex items-center gap-md px-lg py-md bg-surface-container-high text-primary border-r-2 border-primary">
+<span class="material-symbols-outlined" data-icon="settings" data-weight="fill">settings</span>
+<span class="font-medium">System Settings</span>
+</li>
+<li class="cursor-pointer group flex items-center gap-md px-lg py-md text-[#ff4d4d] hover:bg-surface-container-low transition-all mt-auto">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-medium">Sign Out</span>
+</li></ul>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 flex flex-col min-h-screen">
+<!-- TopNavBar (from JSON) -->
+<header class="flex justify-between items-center px-6 sticky top-0 z-40 h-16 bg-surface-container border-b border-outline-variant font-body text-body-md">
+<div class="flex items-center gap-md">
+<img alt="Find It Admin Logo" class="w-8 h-8 rounded-lg object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLvAok8HTra-5zKfe8B93rTOWagGYHxAEqg_dodsMqMvZe7MkVZTp1byGshneSkKbPnkBd2Yk9VIDUN7bn4uKNtdXD8BvxOn3ITui5mqNVhTBCNQ-DEmVq8x5sa-1SWtPvbFEiwzRKAvpELpOAfglp-ASAuUKtwlra6d82yk8GkBAJu2GtFhsw4hqP7apjfMWWqiHZ11CLkhxdxKgjqWgG84oeXBCoa0UlzPOCbIefRhtPwQve342SVQwdw">
+<span class="text-headline-md font-bold tracking-tight text-on-surface">Find It Admin</span>
+</div>
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:bg-surface-bright transition-colors p-sm rounded-full cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<img alt="Admin profile avatar" class="w-8 h-8 rounded-full object-cover cursor-pointer active:opacity-80 border border-outline-variant hover:bg-surface-bright transition-colors" data-alt="A small, circular avatar portrait of an admin user in a high-tech control room environment. Soft, dramatic lighting, dark mode aesthetic, professional mood." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOAyD-iSQeI7e94-z4mrjXir41DLrhudkdxlZ-kLVad0ZIjPkwBCAMUEuWAkywcJT92m3ayYDYWNHrGVkD_M-bcmE5x6GxQEoV9XMYB35jiQXZ7jiwf-SCozTvhGtO25mncst6QnxCnqRcQnj7ddahu-2tu7OYHHA86OUcUb5FL3UXaw7JNGermkspmKqDP702VL48Fi2l1I6C2El-gGSrhdWviUw6d5YlFD7CTfrril1tnZhi9_e_">
+</div>
+</header>
+<!-- Canvas -->
+<div class="p-lg lg:p-xl max-w-[1200px] w-full mx-auto pb-32">
+<h2 class="text-headline-lg font-bold tracking-tight text-on-surface mb-lg">Settings</h2>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-lg">
+<!-- Left Column (Wider) -->
+<div class="lg:col-span-2 flex flex-col gap-lg">
+<!-- General Configuration -->
+<section class="bg-surface-container rounded-lg p-lg border border-outline-variant/30">
+<h3 class="text-headline-md font-semibold text-on-surface mb-md">General Configuration</h3>
+<div class="flex flex-col gap-md">
+<div>
+<label class="block text-label-sm text-on-surface-variant mb-xs">System Name</label>
+<input class="w-full bg-surface-dim border border-outline-variant rounded-lg px-md py-sm text-body-md text-on-surface focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" type="text" value="Find It Production">
+</div>
+<div>
+<label class="block text-label-sm text-on-surface-variant mb-xs">Contact Email</label>
+<input class="w-full bg-surface-dim border border-outline-variant rounded-lg px-md py-sm text-body-md text-on-surface focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" type="email" value="admin@findit.app">
+</div>
+<div>
+<label class="block text-label-sm text-on-surface-variant mb-xs">Timezone</label>
+<select class="w-full bg-surface-dim border border-outline-variant rounded-lg px-md py-sm text-body-md text-on-surface focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all appearance-none">
+<option>UTC (Coordinated Universal Time)</option>
+<option>EST (Eastern Standard Time)</option>
+<option>PST (Pacific Standard Time)</option>
+</select>
+</div>
+</div>
+</section>
+<!-- Moderation Thresholds -->
+<section class="bg-surface-container rounded-lg p-lg border border-outline-variant/30">
+<h3 class="text-headline-md font-semibold text-on-surface mb-md">Moderation Thresholds</h3>
+<div class="flex flex-col gap-lg">
+<div>
+<div class="flex justify-between items-end mb-xs">
+<label class="block text-label-sm text-on-surface-variant">Auto-flagging Sensitivity (Spam)</label>
+<span class="text-label-sm text-on-surface">High (85%)</span>
+</div>
+<input class="w-full h-2 bg-surface-dim rounded-lg appearance-none cursor-pointer accent-primary" max="100" min="0" type="range" value="85">
+</div>
+<div>
+<div class="flex justify-between items-end mb-xs">
+<label class="block text-label-sm text-on-surface-variant">Auto-flagging Sensitivity (NSFW)</label>
+<span class="text-label-sm text-on-surface">Strict (95%)</span>
+</div>
+<input class="w-full h-2 bg-surface-dim rounded-lg appearance-none cursor-pointer accent-primary" max="100" min="0" type="range" value="95">
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column -->
+<div class="flex flex-col gap-lg">
+<!-- Security -->
+<section class="bg-surface-container rounded-lg p-lg border border-outline-variant/30">
+<h3 class="text-headline-md font-semibold text-on-surface mb-md">Security</h3>
+<div class="flex flex-col gap-md">
+<div class="flex items-center justify-between py-sm border-b border-outline-variant/30">
+<div>
+<p class="text-body-md text-on-surface font-medium">Two-Factor Authentication</p>
+<p class="text-label-sm text-on-surface-variant">Enforce 2FA for all admins</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox">
+<div class="w-11 h-6 bg-surface-dim border border-outline-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-primary after:border-primary after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-surface-variant"></div>
+</label>
+</div>
+<div>
+<label class="block text-label-sm text-on-surface-variant mb-xs">Session Timeout (Minutes)</label>
+<input class="w-full bg-surface-dim border border-outline-variant rounded-lg px-md py-sm text-body-md text-on-surface focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" type="number" value="30">
+</div>
+</div>
+</section>
+<!-- Roles & Permissions -->
+<section class="bg-surface-container rounded-lg p-lg border border-outline-variant/30">
+<div class="flex items-center justify-between mb-md">
+<h3 class="text-headline-md font-semibold text-on-surface">Roles &amp; Permissions</h3>
+<button class="text-label-sm text-primary hover:text-on-surface transition-colors">Add Role</button>
+</div>
+<div class="flex flex-col gap-sm">
+<div class="flex items-center justify-between p-sm rounded-lg hover:bg-surface-dim transition-colors border border-transparent hover:border-outline-variant/50">
+<div>
+<p class="text-body-md text-on-surface font-medium">Super Admin</p>
+<p class="text-label-sm text-on-surface-variant">Full system access</p>
+</div>
+<button class="text-label-sm text-on-surface-variant hover:text-primary transition-colors border border-outline-variant/50 rounded px-sm py-xs">Edit</button>
+</div>
+<div class="flex items-center justify-between p-sm rounded-lg hover:bg-surface-dim transition-colors border border-transparent hover:border-outline-variant/50">
+<div>
+<p class="text-body-md text-on-surface font-medium">Moderator</p>
+<p class="text-label-sm text-on-surface-variant">Manage reports &amp; items</p>
+</div>
+<button class="text-label-sm text-on-surface-variant hover:text-primary transition-colors border border-outline-variant/50 rounded px-sm py-xs">Edit</button>
+</div>
+<div class="flex items-center justify-between p-sm rounded-lg hover:bg-surface-dim transition-colors border border-transparent hover:border-outline-variant/50">
+<div>
+<p class="text-body-md text-on-surface font-medium">Support Agent</p>
+<p class="text-label-sm text-on-surface-variant">View user tickets</p>
+</div>
+<button class="text-label-sm text-on-surface-variant hover:text-primary transition-colors border border-outline-variant/50 rounded px-sm py-xs">Edit</button>
+</div>
+</div>
+</section>
+</div>
+</div>
+<div class="mt-xl flex justify-end gap-md border-t border-outline-variant pt-lg">
+<button class="px-lg py-sm rounded-full border border-outline-variant text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all text-body-md font-medium">Discard Changes</button>
+<button class="px-lg py-sm rounded-full bg-primary text-on-primary hover:bg-primary-fixed transition-all text-body-md font-medium">Save Configuration</button>
+</div>
+</div>
+</main>
+
+
+</body></html>

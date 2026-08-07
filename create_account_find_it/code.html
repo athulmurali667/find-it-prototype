@@ -1,0 +1,172 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Create Account - Find It</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error": "#690005",
+                    "on-secondary-container": "#b6b5b4",
+                    "on-primary": "#2f3031",
+                    "inverse-primary": "#5e5e5e",
+                    "secondary-fixed": "#e4e2e2",
+                    "error-container": "#93000a",
+                    "tertiary-fixed-dim": "#ccc5c3",
+                    "on-surface-variant": "#ccc4c9",
+                    "on-surface": "#e4e2e0",
+                    "surface-variant": "#353534",
+                    "surface-container-low": "#1b1c1b",
+                    "surface-container-high": "#2a2a29",
+                    "inverse-on-surface": "#303030",
+                    "on-primary-fixed-variant": "#464747",
+                    "on-primary-fixed": "#1b1c1c",
+                    "on-secondary-fixed": "#1b1c1c",
+                    "primary": "#ffffff",
+                    "on-tertiary-fixed": "#1e1b1a",
+                    "on-primary-container": "#646464",
+                    "on-error-container": "#ffdad6",
+                    "surface-container": "#1f201f",
+                    "secondary-container": "#474747",
+                    "primary-fixed-dim": "#c7c6c6",
+                    "error": "#ffb4ab",
+                    "surface-bright": "#393938",
+                    "tertiary": "#ffffff",
+                    "outline-variant": "#4a4549",
+                    "secondary": "#c8c6c6",
+                    "on-tertiary-fixed-variant": "#4a4644",
+                    "surface-container-highest": "#353534",
+                    "primary-container": "#e3e2e2",
+                    "on-secondary-fixed-variant": "#474747",
+                    "tertiary-fixed": "#e9e1de",
+                    "surface-dim": "#131313",
+                    "surface-container-lowest": "#0e0e0e",
+                    "secondary-fixed-dim": "#c8c6c6",
+                    "on-secondary": "#303030",
+                    "tertiary-container": "#e9e1de",
+                    "surface-tint": "#c7c6c6",
+                    "primary-fixed": "#e3e2e2",
+                    "outline": "#958f93",
+                    "surface": "#131313",
+                    "on-tertiary": "#33302e",
+                    "inverse-surface": "#e4e2e0",
+                    "on-tertiary-container": "#686361",
+                    "on-background": "#e4e2e0",
+                    "background": "#131313"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.5rem",
+                    "sm": "0.25rem",
+                    "md": "0.75rem",
+                    "lg": "1rem",
+                    "xl": "1.5rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "xs": "4px",
+                    "sm": "8px",
+                    "md": "16px",
+                    "lg": "24px",
+                    "xl": "48px",
+                    "gutter": "16px",
+                    "margin-mobile": "16px",
+                    "margin-desktop": "24px"
+            },
+            "fontFamily": {
+                    "headline": [
+                            "Inter", "sans-serif"
+                    ],
+                    "display": [
+                            "Inter", "sans-serif"
+                    ],
+                    "body": [
+                            "Inter", "sans-serif"
+                    ],
+                    "label": [
+                            "Inter", "sans-serif"
+                    ]
+            }
+          }
+        },
+      }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        /* Ambient subtle mesh gradient to avoid plain solid background while remaining dark */
+        .ambient-mesh {
+            background-color: #131313;
+            background-image: 
+                radial-gradient(at 20% 30%, rgba(255, 255, 255, 0.03) 0px, transparent 50%),
+                radial-gradient(at 80% 80%, rgba(255, 255, 255, 0.02) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+        
+        /* Subtle glow for the logo */
+        .logo-glow {
+            box-shadow: 0 0 24px rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="ambient-mesh text-on-surface font-body min-h-screen flex items-center justify-center p-margin-mobile md:p-margin-desktop antialiased">
+<!-- Main Authentication Container (Glassmorphism) -->
+<main class="w-full max-w-[420px] bg-surface-container-low/60 backdrop-blur-2xl border border-outline-variant/30 rounded-xl p-lg md:p-xl flex flex-col items-center shadow-2xl relative overflow-hidden">
+<!-- Optional edge highlight for glass effect -->
+<div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
+<!-- Brand Logo Mark -->
+<div class="mb-lg flex items-center justify-center w-14 h-14 bg-surface-container-highest rounded-full logo-glow border border-outline-variant/50">
+<img src="https://lh3.googleusercontent.com/aida/AP1WRLuO-OUHn-GuuHP1Sl-bPBgPx8aFyns3vKzvvkxAAZ4HsztLLjekOPHeNbjrNNoXpir7T-ALaysYoV-AJ46UF0DYd4JEoDxANZlGYT2KQxJT7YHlXoyPEkrIZB_DU50nSPm1wt8hUUoUmFMXN39vSvShVBRxUflSBVwxtQTUdomevjbJZUg4dxFz7Kf8FAbwbQB7VyPZHRg0wndq8PlQ485gVTkUqq-iSkAO41MY5Sw7b1FyEBcqSArZ45k" alt="Find It Logo" class="w-8 h-8 object-contain">
+</div>
+<!-- Headings -->
+<div class="text-center mb-xl w-full">
+<h1 class="font-headline font-bold text-headline-lg-mobile md:text-headline-lg text-primary tracking-tight mb-xs">
+                Join Find It
+            </h1>
+<p class="text-body-md text-on-surface-variant">
+                Reconnect with what matters.
+            </p>
+</div>
+<!-- Registration Form -->
+<form action="#" class="w-full flex flex-col gap-md" method="POST">
+<!-- Full Name Field -->
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none transition-colors group-focus-within:text-primary text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'wght' 300;">person</span>
+</div>
+<input class="block w-full pl-[44px] pr-md py-3 bg-surface-container-highest border border-outline-variant/40 rounded-lg text-body-md text-on-surface placeholder-on-surface-variant/60 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all duration-200" id="fullname" name="fullname" placeholder="Full Name" required="" type="text">
+</div>
+<!-- Email Field -->
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none transition-colors group-focus-within:text-primary text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'wght' 300;">mail</span>
+</div>
+<input class="block w-full pl-[44px] pr-md py-3 bg-surface-container-highest border border-outline-variant/40 rounded-lg text-body-md text-on-surface placeholder-on-surface-variant/60 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all duration-200" id="email" name="email" placeholder="Email Address" required="" type="email">
+</div>
+<!-- Password Field -->
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none transition-colors group-focus-within:text-primary text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'wght' 300;">lock</span>
+</div>
+<input class="block w-full pl-[44px] pr-md py-3 bg-surface-container-highest border border-outline-variant/40 rounded-lg text-body-md text-on-surface placeholder-on-surface-variant/60 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all duration-200" id="password" name="password" placeholder="Password" required="" type="password">
+</div>
+<!-- Primary CTA -->
+<button class="mt-sm w-full flex justify-center items-center py-3 px-4 bg-primary text-on-primary rounded-full font-label text-[14px] uppercase tracking-wider font-semibold hover:bg-primary-fixed-dim focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-all duration-200 active:scale-[0.98]" type="submit">
+                Create Account
+            </button>
+</form>
+<!-- Footer Link -->
+<div class="mt-xl text-center w-full pt-md border-t border-outline-variant/20">
+<p class="text-body-md text-on-surface-variant">
+                Already have an account? 
+                <a class="font-medium text-primary hover:text-primary-fixed transition-colors" href="#">Sign In</a>
+</p>
+</div>
+</main>
+
+
+</body></html>

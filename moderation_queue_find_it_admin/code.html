@@ -1,0 +1,318 @@
+<!DOCTYPE html><html class="dark" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Find It Admin - Moderation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#e3e2e2",
+                        "surface-variant": "#353534",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "secondary-fixed": "#e4e2e2",
+                        "surface-container": "#1f201f",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "surface-container-high": "#2a2a29",
+                        "tertiary-container": "#e9e1de",
+                        "surface-dim": "#131313",
+                        "on-surface": "#e4e2e0",
+                        "on-background": "#e4e2e0",
+                        "tertiary-fixed": "#e9e1de",
+                        "on-primary": "#2f3031",
+                        "inverse-primary": "#5e5e5e",
+                        "outline-variant": "#4a4549",
+                        "secondary": "#c8c6c6",
+                        "on-primary-container": "#646464",
+                        "on-tertiary-fixed-variant": "#4a4644",
+                        "surface-tint": "#c7c6c6",
+                        "tertiary": "#ffffff",
+                        "inverse-on-surface": "#303030",
+                        "on-secondary-container": "#b6b5b4",
+                        "surface-bright": "#393938",
+                        "surface-container-highest": "#353534",
+                        "on-secondary": "#303030",
+                        "inverse-surface": "#e4e2e0",
+                        "error": "#ffb4ab",
+                        "error-container": "#93000a",
+                        "primary-fixed-dim": "#c7c6c6",
+                        "tertiary-fixed-dim": "#ccc5c3",
+                        "on-secondary-fixed-variant": "#474747",
+                        "background": "#131313",
+                        "on-surface-variant": "#ccc4c9",
+                        "surface": "#131313",
+                        "surface-container-lowest": "#0e0e0e",
+                        "outline": "#958f93",
+                        "on-error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#464747",
+                        "surface-container-low": "#1b1c1b",
+                        "on-tertiary": "#33302e",
+                        "primary": "#ffffff",
+                        "on-tertiary-fixed": "#1e1b1a",
+                        "primary-container": "#e3e2e2",
+                        "secondary-container": "#474747",
+                        "on-error": "#690005",
+                        "on-tertiary-container": "#686361",
+                        "on-primary-fixed": "#1b1c1c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.5rem",
+                        "sm": "0.25rem",
+                        "md": "0.75rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "lg": "24px",
+                        "xl": "48px",
+                        "gutter": "16px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "24px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "display": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "headline-lg-mobile": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "700" }],
+                        "headline-md": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+                        "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+                        "label-sm": ["12px", { lineHeight: "16px", fontWeight: "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined[data-weight="fill"] {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body antialiased selection:bg-primary-container selection:text-on-primary-container min-h-screen flex overflow-hidden">
+<!-- SideNavBar -->
+<nav class="bg-surface-dim dark:bg-surface-dim h-screen w-64 fixed left-0 top-0 flex flex-col h-full border-r border-outline-variant hidden md:flex z-50">
+<!-- Header -->
+<div class="px-6 py-6 border-b border-outline-variant flex items-center gap-4">
+<div>
+<h1 class="text-headline-md font-bold text-on-surface">Admin Console</h1>
+<p class="text-body-md text-on-surface-variant">System Control</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<ul class="flex flex-col flex-1 py-4">
+<li class="px-3 py-1">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all cursor-pointer group" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="dashboard">dashboard</span>
+<span class="">Dashboard</span>
+</a>
+</li>
+<li class="px-3 py-1">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all cursor-pointer group" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="group">group</span>
+<span class="">User Management</span>
+</a>
+</li>
+<li class="px-3 py-1">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-body-md bg-surface-container-high text-primary border-r-2 border-primary cursor-pointer group transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="gavel" data-weight="fill">gavel</span>
+<span class="font-medium">Listings &amp; Content Moderation</span>
+</a>
+</li>
+<li class="px-3 py-1">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all cursor-pointer group" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="category">category</span>
+<span class="">Categories &amp; Attributes</span>
+</a>
+</li>
+<li class="px-3 py-1">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all cursor-pointer group" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="report">report</span>
+<span class="">Reports &amp; Abuse Safety</span>
+</a>
+</li>
+<li class="px-3 py-1">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all cursor-pointer group" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings">settings</span>
+<span class="">System Settings</span>
+</a>
+</li>
+<li class="px-3 py-1 mt-auto">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-body-md text-[#ff4d4d] hover:bg-[#ff4d4d]/10 transition-all cursor-pointer group" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="logout">logout</span>
+<span class="font-medium">Sign Out</span>
+</a>
+</li></ul>
+<!-- Footer / User Info -->
+<div class="p-6 border-t border-outline-variant">
+<div class="flex items-center gap-3">
+<div class="flex-1">
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col ml-0 md:ml-64 h-screen">
+<!-- TopNavBar -->
+<header class="w-full h-16 bg-surface-container dark:bg-surface-container flex justify-between items-center px-6 sticky top-0 z-40 border-b border-outline-variant font-body text-body-md">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-on-surface-variant hover:text-on-surface p-2 rounded-lg hover:bg-surface-bright transition-colors cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<img alt="Find It Admin Logo" class="w-10 h-10 rounded-lg object-cover bg-surface-container-highest" src="https://lh3.googleusercontent.com/aida/AP1WRLvAok8HTra-5zKfe8B93rTOWagGYHxAEqg_dodsMqMvZe7MkVZTp1byGshneSkKbPnkBd2Yk9VIDUN7bn4uKNtdXD8BvxOn3ITui5mqNVhTBCNQ-DEmVq8x5sa-1SWtPvbFEiwzRKAvpELpOAfglp-ASAuUKtwlra6d82yk8GkBAJu2GtFhsw4hqP7apjfMWWqiHZ11CLkhxdxKgjqWgG84oeXBCoa0UlzPOCbIefRhtPwQve342SVQwdw">
+<span class="text-headline-md font-bold tracking-tight text-on-surface md:hidden">Find It Admin</span>
+<!-- Search Bar -->
+<div class="hidden md:flex items-center bg-surface-dim rounded-full px-4 py-1.5 border border-outline-variant focus-within:border-primary transition-colors w-64">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px] mr-2" data-icon="search">search</span>
+<input class="bg-transparent border-none text-body-md text-on-surface placeholder:text-on-surface-variant focus:ring-0 p-0 w-full" placeholder="Search queues..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface hover:bg-surface-bright transition-colors cursor-pointer active:opacity-80 relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface hover:bg-surface-bright transition-colors cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest ml-2 hidden md:flex items-center justify-center overflow-hidden">
+<img alt="Admin profile avatar" class="w-full h-full object-cover" data-alt="A macro shot of a sleek, minimalist metallic sphere reflecting soft studio lighting in a dark void. The surface is brushed titanium, conveying a high-tech, premium, and reliable aesthetic suitable for an admin avatar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzX8BhDB8pnJFTSd5C6U-F0oMgGSC8iXWugMdRdZrpCFBeXbIpEqd3kGUDqgcolHntO3LpElqGNe8BOC8NySGOIC5NskyLTlcWtlsvKmuIpBygD_KghrgRSo_P3UxYrKodPoBexJDCCoZytPcLH2ZVhW8zTN2nbT6vrExemDcbvMH3YAvnSGP4MAIf0-G7TqyDmfMfvz6VWBQTSm_UcWgGhn_8pxSHz8nULLpjgujMAHnZnqKiPyMV">
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto p-6 md:p-8 bg-background">
+<div class="max-w-6xl mx-auto space-y-8">
+<!-- Page Header -->
+<div class="space-y-2">
+<h2 class="text-headline-lg-mobile md:text-headline-lg font-headline text-on-surface">Moderation Queue</h2>
+<p class="text-body-lg text-on-surface-variant">Review and take action on flagged content.</p>
+</div>
+<!-- Tabs -->
+<div class="flex items-center gap-6 border-b border-outline-variant">
+<button class="pb-3 text-body-md font-medium text-primary border-b-2 border-primary">All</button>
+<button class="pb-3 text-body-md font-medium text-on-surface-variant hover:text-on-surface transition-colors">Items</button>
+<button class="pb-3 text-body-md font-medium text-on-surface-variant hover:text-on-surface transition-colors">Comments</button>
+<button class="pb-3 text-body-md font-medium text-on-surface-variant hover:text-on-surface transition-colors">Messages</button>
+</div>
+<!-- Queue Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Card 1: High Risk Item -->
+<div class="bg-surface-container-low rounded-lg border border-outline-variant overflow-hidden flex flex-col shadow-sm">
+<div class="h-48 bg-surface-container-highest relative">
+<img class="w-full h-full object-cover" data-alt="A photograph of a generic unbranded black leather wallet lying open on a dark textured surface. The lighting is harsh, highlighting what appears to be sensitive ID cards inside. The scene feels illicit and concerning, typical of flagged inappropriate content on a dark-mode platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwKFjVoPf1dTGraJVJgkVSWsEvwyHhAfX-4KzI1HGeJ_bnR96ou86J_RrFkM8qZmdIsWIW9psKoc6x12PXnufs13AhoapoUSSRrdGjYptjV5jYRVq4Qpk-2Wz5KBQ8gkFvrO5JznWM4H-Ff191NxO3_p-23BAsZUO0kCBy3TZ-T91HFxx3YoLTtO8C6K7fO2aNmnzKIwdym1plyBkBbrte2ov3_PbsXn9S67gKJz3qJzTnE_8BJWmU">
+<div class="absolute top-3 left-3 bg-error text-on-error px-2 py-1 rounded-sm text-label-sm flex items-center gap-1 shadow-sm backdrop-blur-sm bg-opacity-90">
+<span class="material-symbols-outlined text-[14px]" data-icon="warning">warning</span>
+                                 High Risk
+                             </div>
+<div class="absolute top-3 right-3 bg-surface-container/80 backdrop-blur-md px-2 py-1 rounded-sm text-label-sm text-on-surface">
+                                Item Post
+                             </div>
+</div>
+<div class="p-4 flex flex-col flex-1 gap-4">
+<div class="space-y-1">
+<h3 class="text-body-md font-medium text-on-surface truncate">Found: Black Leather Wallet</h3>
+<p class="text-body-md text-on-surface-variant line-clamp-2 text-sm">Found this near the park entrance. Contains several IDs and credit cards. Message me for details.</p>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded-md border border-outline-variant/50 space-y-2 mt-auto">
+<div class="flex items-center gap-2 text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]" data-icon="flag">flag</span>
+                                    Reported by <span class="text-primary font-medium">@ParkRanger</span>
+</div>
+<p class="text-body-md text-error-container dark:text-error text-sm font-medium">Reason: Contains PII (Personally Identifiable Information)</p>
+</div>
+<div class="flex items-center gap-2 pt-2 border-t border-outline-variant/30">
+<button class="flex-1 bg-surface-container-high hover:bg-surface-bright text-on-surface text-body-md font-medium py-2 rounded-md transition-colors border border-outline-variant">Approve</button>
+<button class="flex-1 bg-error/20 hover:bg-error/30 text-error text-body-md font-medium py-2 rounded-md transition-colors border border-error/30">Remove</button>
+<button class="w-10 h-10 flex items-center justify-center bg-surface-container-high hover:bg-surface-bright text-on-surface rounded-md transition-colors border border-outline-variant" title="Escalate">
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_upward">arrow_upward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 2: Moderate Risk Comment -->
+<div class="bg-surface-container-low rounded-lg border border-outline-variant overflow-hidden flex flex-col shadow-sm">
+<div class="p-4 bg-surface-container-highest border-b border-outline-variant flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex-shrink-0"></div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<span class="text-body-md font-medium text-on-surface">@ScammerBot2024</span>
+<div class="bg-secondary-container text-on-secondary-container px-2 py-1 rounded-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="info">info</span>
+                                         Moderate Risk
+                                     </div>
+</div>
+<p class="text-body-md text-on-surface-variant mt-2 p-3 bg-surface rounded-md border border-outline-variant/50">"I found this! Click here to claim it: http://suspicious-link.biz/claim-now"</p>
+</div>
+</div>
+<div class="p-4 flex flex-col flex-1 gap-4">
+<div class="bg-surface-container-lowest p-3 rounded-md border border-outline-variant/50 space-y-2 mt-auto">
+<div class="flex items-center gap-2 text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]" data-icon="flag">flag</span>
+                                    Reported by <span class="text-primary font-medium">Multiple Users (3)</span>
+</div>
+<p class="text-body-md text-secondary-fixed-dim text-sm font-medium">Reason: Spam / Malicious Link</p>
+</div>
+<div class="flex items-center gap-2 pt-2 border-t border-outline-variant/30">
+<button class="flex-1 bg-surface-container-high hover:bg-surface-bright text-on-surface text-body-md font-medium py-2 rounded-md transition-colors border border-outline-variant">Approve</button>
+<button class="flex-1 bg-error/20 hover:bg-error/30 text-error text-body-md font-medium py-2 rounded-md transition-colors border border-error/30">Remove</button>
+<button class="w-10 h-10 flex items-center justify-center bg-surface-container-high hover:bg-surface-bright text-on-surface rounded-md transition-colors border border-outline-variant" title="Escalate">
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_upward">arrow_upward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 3: Low Risk Item -->
+<div class="bg-surface-container-low rounded-lg border border-outline-variant overflow-hidden flex flex-col shadow-sm opacity-80 hover:opacity-100 transition-opacity">
+<div class="h-48 bg-surface-container-highest relative">
+<img class="w-full h-full object-cover" data-alt="A slightly blurry, poorly lit photograph of a generic blue umbrella leaning against a grey concrete wall in an underground transit station. The image is mundane and innocuous, lacking clear detail but showing no inappropriate content. Dark mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkEzaljtUFDOAtKCcFYqWtOp0xX0hj-pF-MZkervRhOFKzg1z9oh3Milp7zUlrQOExZm3Pl4jRubyuLqqW6Y2IDWk6IqsvwY7aWbTyf31KEKXkCFyPtPm67zn3PVPaymAVrq8JORsLhgliOPXzuEpS0SPjn2dQkdQcOxG2vTbcd-S2lakwroulnfxIUVdImAkmP4gIitGyAmaycX8iGhssvlSJUM5dGO7P27vNFfj8lCwca2zagGmm">
+<div class="absolute top-3 left-3 bg-surface-variant text-on-surface-variant px-2 py-1 rounded-sm text-label-sm flex items-center gap-1 shadow-sm backdrop-blur-sm bg-opacity-90 border border-outline-variant/50">
+<span class="material-symbols-outlined text-[14px]" data-icon="check_circle">check_circle</span>
+                                 Low Risk
+                             </div>
+<div class="absolute top-3 right-3 bg-surface-container/80 backdrop-blur-md px-2 py-1 rounded-sm text-label-sm text-on-surface">
+                                Item Post
+                             </div>
+</div>
+<div class="p-4 flex flex-col flex-1 gap-4">
+<div class="space-y-1">
+<h3 class="text-body-md font-medium text-on-surface truncate">Blue Umbrella</h3>
+<p class="text-body-md text-on-surface-variant line-clamp-2 text-sm">Found a blue umbrella at the station.</p>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded-md border border-outline-variant/50 space-y-2 mt-auto">
+<div class="flex items-center gap-2 text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]" data-icon="flag">flag</span>
+                                    Reported by <span class="text-primary font-medium">@TransitStaff</span>
+</div>
+<p class="text-body-md text-on-surface-variant text-sm font-medium">Reason: Blurry / Poor Quality Image</p>
+</div>
+<div class="flex items-center gap-2 pt-2 border-t border-outline-variant/30">
+<button class="flex-1 bg-primary text-on-primary hover:bg-primary-fixed-dim text-body-md font-medium py-2 rounded-md transition-colors">Approve</button>
+<button class="flex-1 bg-surface-container-high hover:bg-surface-bright text-on-surface text-body-md font-medium py-2 rounded-md transition-colors border border-outline-variant">Remove</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+
+</body></html>

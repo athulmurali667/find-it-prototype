@@ -1,0 +1,342 @@
+<!DOCTYPE html><html class="dark" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Find It Console - Overview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        surface: "#131313",
+                        "surface-dim": "#131313",
+                        "surface-bright": "#393938",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-container-low": "#1b1c1b",
+                        "surface-container": "#1f201f",
+                        "surface-container-high": "#2a2a29",
+                        "surface-container-highest": "#353534",
+                        "on-surface": "#e4e2e0",
+                        "on-surface-variant": "#ccc4c9",
+                        "inverse-surface": "#e4e2e0",
+                        "inverse-on-surface": "#303030",
+                        outline: "#958f93",
+                        "outline-variant": "#4a4549",
+                        "surface-tint": "#c7c6c6",
+                        primary: "#ffffff",
+                        "on-primary": "#2f3031",
+                        "primary-container": "#e3e2e2",
+                        "on-primary-container": "#646464",
+                        "inverse-primary": "#5e5e5e",
+                        secondary: "#c8c6c6",
+                        "on-secondary": "#303030",
+                        "secondary-container": "#474747",
+                        "on-secondary-container": "#b6b5b4",
+                        tertiary: "#ffffff",
+                        "on-tertiary": "#33302e",
+                        "tertiary-container": "#e9e1de",
+                        "on-tertiary-container": "#686361",
+                        error: "#ffb4ab",
+                        "on-error": "#690005",
+                        "error-container": "#93000a",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed": "#e3e2e2",
+                        "primary-fixed-dim": "#c7c6c6",
+                        "on-primary-fixed": "#1b1c1c",
+                        "on-primary-fixed-variant": "#464747",
+                        "secondary-fixed": "#e4e2e2",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "on-secondary-fixed-variant": "#474747",
+                        "tertiary-fixed": "#e9e1de",
+                        "tertiary-fixed-dim": "#ccc5c3",
+                        "on-tertiary-fixed": "#1e1b1a",
+                        "on-tertiary-fixed-variant": "#4a4644",
+                        background: "#131313",
+                        "on-background": "#e4e2e0",
+                        "surface-variant": "#353534",
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                        sm: "0.25rem",
+                        md: "0.75rem",
+                        lg: "1rem",
+                        xl: "1.5rem",
+                        full: "9999px",
+                    },
+                    spacing: {
+                        base: "8px",
+                        xs: "4px",
+                        sm: "8px",
+                        md: "16px",
+                        lg: "24px",
+                        xl: "48px",
+                        gutter: "16px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "24px",
+                    },
+                    fontFamily: {
+                        headline: ["Inter", "sans-serif"],
+                        display: ["Inter", "sans-serif"],
+                        body: ["Inter", "sans-serif"],
+                        label: ["Inter", "sans-serif"],
+                    },
+                    fontSize: {
+                        "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "headline-lg-mobile": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "700" }],
+                        "headline-md": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+                        "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+                        "label-sm": ["12px", { lineHeight: "16px", fontWeight: "600" }],
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+<body class="bg-background text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container min-h-screen flex">
+<aside class="h-screen w-64 flex flex-col fixed left-0 top-0 border-r border-outline-variant bg-surface-container-low z-50">
+<div class="flex flex-col h-full py-6"><div class="flex items-center gap-3 px-4 mb-6">
+<img alt="Find It Logo" class="h-8 w-8 object-contain rounded-md bg-surface-container p-1" src="https://lh3.googleusercontent.com/aida/AP1WRLvAok8HTra-5zKfe8B93rTOWagGYHxAEqg_dodsMqMvZe7MkVZTp1byGshneSkKbPnkBd2Yk9VIDUN7bn4uKNtdXD8BvxOn3ITui5mqNVhTBCNQ-DEmVq8x5sa-1SWtPvbFEiwzRKAvpELpOAfglp-ASAuUKtwlra6d82yk8GkBAJu2GtFhsw4hqP7apjfMWWqiHZ11CLkhxdxKgjqWgG84oeXBCoa0UlzPOCbIefRhtPwQve342SVQwdw">
+<span class="text-headline-md font-headline-lg font-bold text-on-surface">Find It Admin</span>
+</div>
+<nav class="flex-1 space-y-1 mt-2">
+<a class="flex items-center gap-3 py-3 text-primary font-semibold border-l-4 border-primary pl-3 bg-surface-container-highest/50 opacity-90 transition-opacity" href="#">
+<span class="material-symbols-outlined text-xl fill">dashboard</span>
+<span class="text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 py-3 text-on-surface-variant hover:text-on-surface pl-4 hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-xl">group</span>
+<span class="text-body-md">User Management</span>
+</a>
+<a class="flex items-center gap-3 py-3 text-on-surface-variant hover:text-on-surface pl-4 hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-xl">inventory_2</span>
+<span class="text-body-md">Listings &amp; Content Moderation</span>
+</a>
+<a class="flex items-center gap-3 py-3 text-on-surface-variant hover:text-on-surface pl-4 hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-xl">security</span>
+<span class="text-body-md">Reports &amp; Abuse Safety</span>
+</a>
+<a class="flex items-center gap-3 py-3 text-on-surface-variant hover:text-on-surface pl-4 hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-xl">settings</span>
+<span class="text-body-md">System Settings</span>
+</a>
+</nav>
+<div class="px-4 mt-auto space-y-4">
+<div class="border-t border-outline-variant pt-4 space-y-1">
+<a class="flex items-center gap-3 py-2 hover:bg-surface-container-high transition-colors duration-200 rounded-lg pl-4" href="#" style="color: rgb(255, 77, 77);">
+<span class="material-symbols-outlined text-xl">logout</span>
+<span class="text-body-md">Sign Out</span>
+</a>
+</div>
+</div>
+</div>
+</aside>
+<div class="flex-1 flex flex-col min-w-0 bg-background ml-64">
+<header class="docked full-width top-0 sticky z-40 border-b border-outline-variant flex justify-between items-center w-full px-6 h-16 bg-surface/80 backdrop-blur-xl transition-[backdrop-filter] duration-300">
+
+<div class="flex-1 max-w-2xl flex items-center">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">search</span>
+<input class="w-full bg-surface-container border border-outline-variant rounded-full py-2 pl-10 pr-4 text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" placeholder="Search by User ID, Listing ID, Mobile Number, or Keywords" type="text">
+</div>
+</div>
+<div class="flex items-center gap-4 ml-6">
+<div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-high rounded-full border border-outline-variant">
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+<span class="text-label-sm text-on-surface uppercase tracking-wider">System Health</span>
+</div>
+<button class="flex items-center gap-2 bg-surface-container-high hover:bg-surface-container-highest px-4 py-2 rounded-full border border-outline-variant transition-colors text-body-md font-medium">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                    Add Admin
+                </button>
+<button class="hover:bg-surface-container-highest rounded-full p-2 text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="flex items-center gap-2 cursor-pointer pl-2 border-l border-outline-variant">
+<img alt="Administrator Avatar" class="w-8 h-8 rounded-full border border-outline-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2E63iVjeZX2lOJ7hFkZ8JEuHvPeIXzk7RHyEJRjzclniqv5W513K2dglwUuJKW7ihXJhxiT9FoQtANYUXTtx_S7jpgTrf1yUob2R8z2HrYS4ts1hfRsx34lpijcp1AOIo-Kytc-P9vvPWlFLGC1eOVH8ELj6AiOreHt5bFQIAO1-yFWEkLphaIs1PGw3fN9L6BYuGEWehAKFJkjvSY4Nk6iogwVQ2RRr8n64CUvMYetOmmz0c0HYb">
+
+
+</div>
+</div>
+</header>
+<main class="flex-1 p-6 lg:p-8 overflow-y-auto w-full max-w-[1600px] mx-auto space-y-8">
+<div class="mb-2">
+<h1 class="text-headline-lg font-headline-lg text-on-surface">Dashboard Overview</h1>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+<div class="bg-surface-container-low border border-outline-variant rounded-lg p-5 flex flex-col gap-2 relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-surface-container-high to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex justify-between items-start z-10">
+<span class="text-label-sm text-on-surface-variant uppercase tracking-wider">Active Listings</span>
+<span class="material-symbols-outlined text-on-surface-variant text-lg">list_alt</span>
+</div>
+<div class="z-10">
+<h3 class="text-headline-lg text-on-surface font-headline-lg">142,850</h3>
+<p class="text-body-md text-emerald-400 flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px]">trending_up</span> +8% this week
+                        </p>
+</div>
+</div>
+<div class="bg-surface-container-low border border-error-container/50 rounded-lg p-5 flex flex-col gap-2 relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-error-container/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex justify-between items-start z-10">
+<span class="text-label-sm text-on-surface-variant uppercase tracking-wider">Pending Mod</span>
+<span class="material-symbols-outlined text-error text-lg">gavel</span>
+</div>
+<div class="z-10">
+<h3 class="text-headline-lg text-on-surface font-headline-lg">1,240</h3>
+<p class="text-body-md text-error flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px]">warning</span> Needs Review
+                        </p>
+</div>
+</div>
+<div class="bg-surface-container-low border border-outline-variant rounded-lg p-5 flex flex-col gap-2 relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-surface-container-high to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex justify-between items-start z-10">
+<span class="text-label-sm text-on-surface-variant uppercase tracking-wider">Monthly Users</span>
+<span class="material-symbols-outlined text-on-surface-variant text-lg">group</span>
+</div>
+<div class="z-10">
+<h3 class="text-headline-lg text-on-surface font-headline-lg">520k</h3>
+<p class="text-body-md text-emerald-400 flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px]">trending_up</span> +12%
+                        </p>
+</div>
+</div>
+<div class="bg-surface-container-low border border-outline-variant rounded-lg p-5 flex flex-col gap-2 relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-surface-container-high to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex justify-between items-start z-10">
+<span class="text-label-sm text-on-surface-variant uppercase tracking-wider">Active Scams</span>
+<span class="material-symbols-outlined text-on-surface-variant text-lg">security</span>
+</div>
+<div class="z-10">
+<h3 class="text-headline-lg text-on-surface font-headline-lg">42</h3>
+<p class="text-body-md text-on-surface-variant flex items-center gap-1 mt-1">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span> 12 Unresolved
+                        </p>
+</div>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<h2 class="text-headline-md text-on-surface font-semibold">Listing Moderation Queue</h2>
+<div class="flex gap-2">
+<select class="bg-surface-container border border-outline-variant text-body-md text-on-surface rounded-md px-3 py-1.5 focus:ring-primary focus:border-primary">
+<option>Category: All</option>
+</select>
+<select class="bg-surface-container border border-outline-variant text-body-md text-on-surface rounded-md px-3 py-1.5 focus:ring-primary focus:border-primary">
+<option>Status: Pending Review</option>
+</select>
+<select class="bg-surface-container border border-outline-variant text-body-md text-on-surface rounded-md px-3 py-1.5 focus:ring-primary focus:border-primary">
+<option>Sort: Oldest First</option>
+</select>
+</div>
+</div>
+<div class="bg-surface-container-low border border-outline-variant rounded-xl overflow-hidden">
+<table class="w-full text-left text-body-md">
+<thead class="bg-surface-container border-b border-outline-variant text-label-sm text-on-surface-variant uppercase tracking-wider">
+<tr>
+<th class="px-6 py-4 font-medium">Listing</th>
+<th class="px-6 py-4 font-medium">Category</th>
+<th class="px-6 py-4 font-medium">User &amp; Value</th>
+<th class="px-6 py-4 font-medium">Risk Assessment</th>
+<th class="px-6 py-4 font-medium text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-highest/20 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-md bg-surface-container-high border border-outline-variant flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-xl">two_wheeler</span>
+</div>
+<div>
+<div class="font-medium text-on-surface">2022 Bajaj Pulsar N250</div>
+<div class="text-label-sm text-on-surface-variant">#L-9082</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-on-surface-variant">Vehicles</td>
+<td class="px-6 py-4">
+<div class="text-on-surface">@rahul_k</div>
+<div class="font-medium">$2,100</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-emerald-400"></div>
+<span class="text-on-surface-variant">Low (12%)</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 rounded-md text-emerald-400 hover:bg-emerald-400/10 transition-colors border border-transparent hover:border-emerald-400/20" title="Approve">
+<span class="material-symbols-outlined text-[20px]">check</span>
+</button>
+<button class="p-1.5 rounded-md text-error hover:bg-error/10 transition-colors border border-transparent hover:border-error/20" title="Reject">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+<button class="p-1.5 rounded-md text-on-surface-variant hover:bg-surface-container-highest transition-colors border border-transparent hover:border-outline-variant" title="View Details">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-highest/20 transition-colors bg-error-container/5 border-l-2 border-l-error">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-md bg-surface-container-high border border-outline-variant flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-xl">smartphone</span>
+</div>
+<div>
+<div class="font-medium text-on-surface">iPhone 16 Pro 256GB</div>
+<div class="text-label-sm text-on-surface-variant">#L-9083</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-on-surface-variant">Mobiles</td>
+<td class="px-6 py-4">
+<div class="text-on-surface">@tech_deals</div>
+<div class="font-medium text-error">$350</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+<span class="text-error font-medium">High (89%)</span>
+<span class="text-xs text-on-surface-variant ml-1">- Price anomaly</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="px-3 py-1.5 text-xs font-medium rounded-md text-on-error bg-error hover:bg-error/90 transition-colors">
+                                            Flag Fraud
+                                        </button>
+<button class="p-1.5 rounded-md text-on-surface-variant hover:bg-surface-container-highest transition-colors border border-outline-variant" title="Contact Seller">
+<span class="material-symbols-outlined text-[20px]">mail</span>
+</button>
+<button class="p-1.5 rounded-md text-error hover:bg-error/10 transition-colors border border-transparent hover:border-error/20" title="Delete">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+</div>
+
+
+</body></html>

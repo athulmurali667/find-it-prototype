@@ -1,21 +1,47 @@
 /* Main Application Logic for Find It */
 
+// LocalStorage helpers for conversations and temporary data
+function getStoredData(key, fallbackValue) {
+    try {
+        const stored = localStorage.getItem(key);
+        return stored ? JSON.parse(stored) : fallbackValue;
+    } catch (e) {
+        console.warn("LocalStorage access issue:", e);
+        return fallbackValue;
+    }
+}
+
+function setStoredData(key, value) {
+    try {
+        localStorage.setItem(key, JSON.stringify(value));
+    } catch (e) {
+        console.warn("LocalStorage write issue:", e);
+    }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+    window.onerror = function(message, source, lineno, colno, error) {
+        console.error("Global error caught:", message, error);
+        alert("An error occurred: " + message + ". Please try hard-refreshing the page.");
+    };
+
     // App State
-    let posts = getStoredData("findit_posts", INITIAL_POSTS);
-    let profile = getStoredData("findit_profile", INITIAL_PROFILE);
-    let conversations = getStoredData("findit_conversations_v2", INITIAL_CONVERSATIONS);
+    let posts = [];
+    let profile = getStoredData("findit_current_user", null);
+    let conversations = getStoredData("findit_conversations_v2", []);
     let currentView = "home";
     let activeCategoryFilter = "all";
     let activeStatusFilter = "all";
     let activeConversationId = conversations[0] ? conversations[0].id : null;
     let selectedImageBase64 = null;
-    let isAuthenticated = true; // Set to true by default for prototyping so auth guard doesn't block navigation
-    let isAdmin = profile.isAdmin || false;
+    let isAuthenticated = !!profile;
+    let isAdmin = profile ? (profile.isAdmin === 1 || profile.isAdmin === true) : false;
 
     // DOM Elements
     const views = {
         login: document.getElementById("view-login"),
+        "create-account": document.getElementById("view-create-account"),
+        "forgot-password": document.getElementById("view-forgot-password"),
         home: document.getElementById("view-home"),
         search: document.getElementById("view-search"),
         create: document.getElementById("view-create"),
@@ -29,20 +55,69 @@ document.addEventListener("DOMContentLoaded", () => {
     const editProfileModal = document.getElementById("edit-profile-modal");
 
     // Initialize App
-    function init() {
+    async function init() {
+        try {
+            if (profile) {
+                const userRes = await fetch('/api/users/' + profile.username);
+                if (userRes.ok) {
+                    profile = await userRes.json();
+                    setStoredData("findit_current_user", profile);
+                    isAdmin = profile.isAdmin === 1 || profile.isAdmin === true;
+                } else {
+                    profile = null;
+                    isAuthenticated = false;
+                    isAdmin = false;
+                    setStoredData("findit_current_user", null);
+                }
+            }
+
+            const postsRes = await fetch('/api/posts');
+            if (postsRes.ok) {
+                posts = await postsRes.json();
+            }
+        } catch (e) {
+            console.error("Failed to load initial data from API:", e);
+        }
+
         setupNavigation();
         renderFeedView();
         renderSearchView();
-        renderProfileView();
-        renderMessagesView();
+        if (profile) {
+            renderProfileView();
+            renderMessagesView();
+        }
         setupCreateForm();
         setupEditProfileForm();
         setupNewsletterForm();
         setupAuth();
+        updateAuthUI();
         if (isAdmin) renderAdminView();
         
         // Initial route sync
-        navigateTo("home");
+        const urlParams = new URLSearchParams(window.location.search);
+        if (isAuthenticated && isAdmin && (urlParams.get('admin') === '1')) {
+            // Admin just logged in — go directly to admin dashboard
+            navigateTo("admin");
+            // Clean the URL
+            history.replaceState({}, '', '/');
+            // Populate real admin stats
+            const activeEl = document.getElementById('admin-stat-active');
+            const usersEl = document.getElementById('admin-stat-users');
+            if (activeEl && posts) activeEl.textContent = posts.length;
+            // Fetch user count
+            fetch('/api/users/count').then(r => r.json()).then(d => {
+                if (usersEl && d.count !== undefined) usersEl.textContent = d.count;
+            }).catch(() => {
+                if (usersEl) usersEl.textContent = '—';
+            });
+            // Set admin avatar
+            const adminAvatar = document.getElementById('admin-header-avatar');
+            if (adminAvatar && profile && profile.avatar) adminAvatar.src = profile.avatar;
+        } else if (isAuthenticated) {
+            navigateTo("home");
+        } else {
+            navigateTo("login");
+        }
     }
 
     /* ----------------------------------------------------
@@ -64,8 +139,12 @@ document.addEventListener("DOMContentLoaded", () => {
         // Handle Logout Route
         if (viewName === "logout") {
             isAuthenticated = false;
+            profile = null;
+            isAdmin = false;
+            setStoredData("findit_current_user", null);
             updateAuthUI();
-            navigateTo("home");
+            navigateTo("login");
+            showToast("You have been logged out.");
             return;
         }
 
@@ -106,14 +185,26 @@ document.addEventListener("DOMContentLoaded", () => {
                 link.classList.add("text-primary", "font-bold");
                 link.classList.remove("text-on-surface-variant");
                 const icon = link.querySelector(".material-symbols-outlined");
-                if (icon) icon.setAttribute("data-weight", "fill");
+                if (icon) icon.style.fontVariationSettings = "'FILL' 1, 'wght' 400";
             } else {
                 link.classList.remove("text-primary", "font-bold");
                 link.classList.add("text-on-surface-variant");
                 const icon = link.querySelector(".material-symbols-outlined");
-                if (icon) icon.removeAttribute("data-weight");
+                if (icon) icon.style.fontVariationSettings = "'FILL' 0, 'wght' 300";
             }
         });
+        
+        // Quality of life: Prefill email if moving from login to register
+        if (viewName === "create-account") {
+            const loginEmail = document.getElementById("login-email");
+            const regForm = document.querySelector("#view-create-account form");
+            if (loginEmail && loginEmail.value && regForm) {
+                const regEmail = regForm.querySelector('input[name="email"]');
+                if (regEmail && !regEmail.value) {
+                    regEmail.value = loginEmail.value;
+                }
+            }
+        }
 
         // Toggle layout elements for login and admin pages
         const mobileHeader = document.getElementById("mobile-header");
@@ -121,7 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const desktopSidebar = document.getElementById("desktop-sidebar");
         const mainContent = document.getElementById("main-content");
         
-        if (viewName === "login" || viewName === "admin") {
+        if (viewName === "login" || viewName === "admin" || viewName === "create-account" || viewName === "forgot-password") {
             if (mobileHeader) mobileHeader.style.display = "none";
             if (mobileBottomNav) mobileBottomNav.style.display = "none";
             if (desktopSidebar) desktopSidebar.style.display = "none";
@@ -152,12 +243,120 @@ document.addEventListener("DOMContentLoaded", () => {
     function setupAuth() {
         const loginForm = document.getElementById("login-form");
         if (loginForm) {
-            loginForm.addEventListener("submit", (e) => {
+            loginForm.addEventListener("submit", async (e) => {
                 e.preventDefault();
-                isAuthenticated = true;
-                updateAuthUI();
-                navigateTo("home");
+                const email = loginForm.querySelector('input[type="email"]').value;
+                const password = loginForm.querySelector('input[type="password"]').value;
+                
+                try {
+                    const res = await fetch('/api/users/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password })
+                    });
+                    const data = await res.json();
+                    
+                    if (res.ok && data.success) {
+                        profile = data.user;
+                        isAuthenticated = true;
+                        isAdmin = profile.isAdmin === 1 || profile.isAdmin === true;
+                        setStoredData("findit_current_user", profile);
+                        
+                        // Update UI with new user data
+                        updateAuthUI();
+                        renderProfileView();
+                        if (isAdmin) renderAdminView();
+                        
+                        navigateTo("home");
+                        showToast("Welcome back, " + profile.name + "!");
+                    } else {
+                        showToast(data.error || "Login failed");
+                    }
+                } catch (e) {
+                    console.error(e);
+                    showToast("Network error during login");
+                }
             });
+        }
+
+        const createAccountView = document.getElementById("view-create-account");
+        if (createAccountView) {
+            const registerForm = createAccountView.querySelector("form");
+            if (registerForm) {
+                registerForm.addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    
+                    const name = registerForm.querySelector('input[name="fullname"]').value.trim();
+                    const email = registerForm.querySelector('input[name="email"]').value.trim();
+                    const password = registerForm.querySelector('input[name="password"]').value;
+                    
+                    if (!email) {
+                        showToast("Please enter your email address.");
+                        return;
+                    }
+                    if (!password) {
+                        showToast("Please enter a password.");
+                        return;
+                    }
+                    
+                    try {
+                        const res = await fetch('/api/users/register', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name, email, password })
+                        });
+                        const data = await res.json();
+                        
+                        if (res.ok && data.success) {
+                            profile = data.user;
+                            isAuthenticated = true;
+                            isAdmin = profile.isAdmin === 1 || profile.isAdmin === true;
+                            setStoredData("findit_current_user", profile);
+                            
+                            updateAuthUI();
+                            
+                            // Update UI with new user data
+                            renderProfileView();
+                            if (isAdmin) renderAdminView();
+                            
+                            // Show success modal
+                            const modal = document.getElementById("registration-success-modal");
+                            const content = document.getElementById("success-modal-content");
+                            if (modal && content) {
+                                modal.classList.remove("hidden");
+                                modal.classList.add("flex");
+                                setTimeout(() => {
+                                    content.classList.remove("scale-95", "opacity-0");
+                                    content.classList.add("scale-100", "opacity-100");
+                                }, 10);
+                            }
+                            
+                            if (!window.closeSuccessModal) {
+                                window.closeSuccessModal = function() {
+                                    const m = document.getElementById("registration-success-modal");
+                                    const c = document.getElementById("success-modal-content");
+                                    if (c) {
+                                        c.classList.remove("scale-100", "opacity-100");
+                                        c.classList.add("scale-95", "opacity-0");
+                                    }
+                                    setTimeout(() => {
+                                        if (m) {
+                                            m.classList.add("hidden");
+                                            m.classList.remove("flex");
+                                        }
+                                        navigateTo("home");
+                                    }, 300);
+                                };
+                            }
+                        } else {
+                            showToast(data.error || "Registration failed");
+                        }
+                    } catch (e) {
+                        console.error(e);
+                        showToast("Network error during registration");
+                    }
+                });
+            }
         }
     }
 
@@ -207,7 +406,7 @@ document.addEventListener("DOMContentLoaded", () => {
             card.className = "bg-surface-container-low border border-surface-container rounded-xl overflow-hidden shadow-sm flex flex-col";
             
             // Dynamic check for current user's profile
-            const isOwnPost = post.reporterUsername === profile.username;
+            const isOwnPost = profile && post.reporterUsername === profile.username;
             const displayAvatar = isOwnPost ? profile.avatar : (post.reporterAvatar || 'https://via.placeholder.com/40');
             const displayName = isOwnPost ? profile.name : post.reporterName;
 
@@ -216,8 +415,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="flex items-center gap-sm p-sm border-b border-surface-container">
                     <img src="${displayAvatar}" alt="${displayName}" class="w-10 h-10 rounded-full object-cover">
                     <div class="flex flex-col">
-                        <span class="font-body-md font-bold text-on-surface">${escapeHtml(displayName)}</span>
-                        <span class="font-label-sm text-on-surface-variant">${formatRelativeTime(post.date)}</span>
+                        <span class="text-body-md font-bold text-on-surface">${escapeHtml(displayName)}</span>
+                        <span class="text-label-sm text-on-surface-variant">${formatRelativeTime(post.date)}</span>
                     </div>
                 </div>
             `;
@@ -229,10 +428,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const imageSection = `
                 <div class="relative w-full aspect-square md:aspect-[4/5] bg-surface-container overflow-hidden cursor-pointer" onclick="openItemModal('${post.id}')">
                     <img src="${post.image}" alt="${post.title}" class="w-full h-full object-cover">
-                    <div class="absolute top-sm left-sm px-sm py-xs rounded-full font-label-sm uppercase font-bold tracking-wider ${badgeBg} shadow-sm backdrop-blur-md bg-opacity-90">
+                    <div class="absolute top-sm left-sm px-sm py-xs rounded-full text-label-sm uppercase font-bold tracking-wider ${badgeBg} shadow-sm backdrop-blur-md bg-opacity-90">
                         ${post.type}
                     </div>
-                    <div class="absolute top-sm right-sm px-sm py-xs rounded-full font-label-sm uppercase font-bold tracking-wider bg-surface/80 text-on-surface backdrop-blur-md">
+                    <div class="absolute top-sm right-sm px-sm py-xs rounded-full text-label-sm uppercase font-bold tracking-wider bg-surface/80 text-on-surface backdrop-blur-md">
                         ${post.category}
                     </div>
                 </div>
@@ -241,18 +440,18 @@ document.addEventListener("DOMContentLoaded", () => {
             // Content
             const contentSection = `
                 <div class="p-md flex flex-col gap-xs">
-                    <h3 class="font-headline-md text-on-surface">${post.title}</h3>
-                    <div class="flex items-center gap-xs text-on-surface-variant font-body-md mb-xs">
+                    <h3 class="text-headline-md text-on-surface font-bold">${post.title}</h3>
+                    <div class="flex items-center gap-xs text-on-surface-variant text-body-md mb-xs">
                         <span class="material-symbols-outlined text-[16px]">location_on</span>
                         <span>${post.location}</span>
                     </div>
-                    <p class="font-body-md text-on-surface-variant line-clamp-3">${post.description}</p>
+                    <p class="text-body-md text-on-surface-variant line-clamp-3">${post.description}</p>
                 </div>
             `;
 
             // Footer / Actions
             const messageAction = isOwnPost ? '' : `
-                    <button class="flex-1 flex items-center justify-center gap-xs py-sm rounded-lg hover:bg-surface-container transition-colors text-on-surface-variant font-body-md font-bold" onclick="startMessage('${post.id}')">
+                    <button class="flex-1 flex items-center justify-center gap-xs py-sm rounded-lg hover:bg-surface-container transition-colors text-on-surface-variant text-body-md font-bold" onclick="startMessage('${post.id}')">
                         <span class="material-symbols-outlined text-[20px]">chat_bubble</span>
                         Message
                     </button>
@@ -260,7 +459,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const footerSection = `
                 <div class="p-sm pt-0 flex gap-sm border-t border-surface-container mt-auto">
-                    <button class="flex-1 flex items-center justify-center gap-xs py-sm rounded-lg hover:bg-surface-container transition-colors text-on-surface-variant font-body-md font-bold" onclick="openItemModal('${post.id}')">
+                    <button class="flex-1 flex items-center justify-center gap-xs py-sm rounded-lg hover:bg-surface-container transition-colors text-on-surface-variant text-body-md font-bold" onclick="openItemModal('${post.id}')">
                         <span class="material-symbols-outlined text-[20px]">visibility</span>
                         View Details
                     </button>
@@ -479,7 +678,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         if (createFormBtn) {
-            createFormBtn.addEventListener("click", () => {
+            createFormBtn.addEventListener("click", async () => {
                 const titleInput = document.getElementById("item_name");
                 const locationInput = document.getElementById("location");
                 const descriptionInput = document.getElementById("description");
@@ -509,23 +708,40 @@ document.addEventListener("DOMContentLoaded", () => {
                     "https://lh3.googleusercontent.com/aida-public/AB6AXuBhgRjImZoXBTGU2gsDollJqiJATKSDEpIVYQ1-nuQphHfL-Rke7ICVUtx1vA-GPMTNhszusAOcj3dJVUOY-iaEH7U75JdXg-5u_XRUuDSsChHkUGBnPBHGHAc5BXBXdpd2ruQWussQLYflVCHsmxSnV4vn7ahuwGDSCD44vXlWntx_V3pUAzvfGgKZAtAaOrmrDL5lGNihs_Ug8E71epgqutb4FbnUVb12m_ZLQnewQGof_zp38des";
 
                 const newPost = {
-                    id: "post-" + Date.now(),
                     title: title,
                     type: postType,
                     category: category,
                     location: location,
                     timeAgo: "Just now",
-                    date: new Date().toISOString().split("T")[0],
                     image: selectedImageBase64 || defaultImg,
                     description: description,
                     reporterName: profile.name,
                     reporterUsername: profile.username,
-                    reporterAvatar: profile.avatar,
-                    status: "Active"
+                    reporterAvatar: profile.avatar
                 };
 
-                posts.unshift(newPost);
-                setStoredData("findit_posts", posts);
+                try {
+                    const res = await fetch('/api/posts', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newPost)
+                    });
+                    
+                    if (res.ok) {
+                        // Refetch posts to ensure UI has latest ID and data
+                        const fetchRes = await fetch('/api/posts');
+                        if (fetchRes.ok) {
+                            posts = await fetchRes.json();
+                        }
+                    } else {
+                        showToast("Failed to create post. Please try again.");
+                        return;
+                    }
+                } catch (e) {
+                    console.error("API error", e);
+                    showToast("Network error while creating post.");
+                    return;
+                }
 
                 // Reset form
                 if (titleInput) titleInput.value = "";
@@ -537,7 +753,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
                 showToast("Post created successfully!");
-                navigateTo("feed");
+                navigateTo("home");
             });
         }
     }
@@ -553,6 +769,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const countEl = document.getElementById("profile-posts-count");
         const gridEl = document.getElementById("profile-posts-grid");
 
+        if (!profile) return;
         if (nameEl) nameEl.textContent = profile.name;
         if (bioEl) bioEl.textContent = profile.bio;
         if (avatarEl) avatarEl.src = profile.avatar;
@@ -692,60 +909,416 @@ document.addEventListener("DOMContentLoaded", () => {
     /* ----------------------------------------------------
        ADMIN VIEW
     ---------------------------------------------------- */
-    function renderAdminView() {
+    async function renderAdminView() {
         if (!isAdmin) return;
         
         const activeCountEl = document.getElementById("admin-stat-active");
-        const reconnectedCountEl = document.getElementById("admin-stat-reconnected");
+        const pendingCountEl = document.getElementById("admin-stat-pending");
         const usersCountEl = document.getElementById("admin-stat-users");
+        const scamsCountEl = document.getElementById("admin-stat-scams");
         const tbody = document.getElementById("admin-reports-tbody");
         
         if (activeCountEl) {
             activeCountEl.textContent = posts.length; // Total active listings
         }
         
-        if (reconnectedCountEl) {
-            // Mock reconnected items
-            reconnectedCountEl.textContent = Math.floor(posts.length * 0.4) + 12; 
+        // Fetch real data for stats
+        try {
+            const [usersRes, reportsRes] = await Promise.all([
+                fetch('/api/users'),
+                fetch('/api/reports')
+            ]);
+            const users = await usersRes.json();
+            const reports = await reportsRes.json();
+            
+            if (usersCountEl) usersCountEl.textContent = users.length;
+            
+            const pendingMod = posts.filter(p => p.status !== 'Approved' && p.status !== 'Rejected').length;
+            if (pendingCountEl) pendingCountEl.textContent = pendingMod;
+            
+            if (scamsCountEl) scamsCountEl.textContent = reports.filter(r => r.status !== 'Resolved' && r.status !== 'Dismissed').length;
+        } catch (e) {
+            console.error("Failed to fetch dashboard stats", e);
         }
-        
-        if (usersCountEl) {
-            // Mock reported users
-            usersCountEl.textContent = "2"; 
-        }
-        
+
         if (tbody) {
             // Take up to 10 most recent posts
             const recentPosts = [...posts].reverse().slice(0, 10);
-            tbody.innerHTML = recentPosts.map(post => {
-                const isLost = post.type === "lost";
-                const badgeClass = isLost ? 
-                    "bg-surface-container-high text-on-surface border border-outline-variant" : 
-                    "bg-primary-container text-on-primary-container border border-primary-container";
-                const statusLabel = isLost ? "Pending" : "Resolved";
+            tbody.innerHTML = recentPosts.map((post, i) => {
                 const category = (post.category || "General").charAt(0).toUpperCase() + (post.category || "General").slice(1);
                 
+                // Let's create some dummy logic for risk assessment so it looks like the design
+                const isHighRisk = i % 3 === 1; // Arbitrary logic for UI demonstration
+                
+                let riskHTML = '';
+                if (isHighRisk) {
+                    riskHTML = `<div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-error"></div><span class="text-error font-medium">High (89%)</span><span class="text-xs text-on-surface-variant">- Price anomaly</span></div>`;
+                } else {
+                    riskHTML = `<div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-emerald-400"></div><span class="text-on-surface-variant">Low (12%)</span></div>`;
+                }
+                
+                let actionsHTML = '';
+                if (isHighRisk) {
+                    actionsHTML = `
+                        <div class="flex justify-end gap-2">
+                            <button onclick="adminSetPostStatus('${post.id}', 'Rejected')" class="px-3 py-1.5 text-xs font-bold rounded-lg text-on-error bg-error hover:bg-error/90 transition-colors">Flag Fraud</button>
+                            <button onclick="startAdminMessage('${post.id}')" class="p-1.5 rounded-md text-on-surface-variant hover:bg-surface-container-highest border border-transparent hover:border-outline-variant transition-colors" title="Contact"><span class="material-symbols-outlined text-xl">mail</span></button>
+                            <button onclick="openItemModal('${post.id}')" class="p-1.5 rounded-md text-on-surface-variant hover:bg-surface-container-highest border border-transparent hover:border-outline-variant transition-colors" title="View"><span class="material-symbols-outlined text-xl">visibility</span></button>
+                        </div>
+                    `;
+                } else {
+                    actionsHTML = `
+                        <div class="flex justify-end gap-2">
+                            <button onclick="adminSetPostStatus('${post.id}', 'Approved')" class="p-1.5 rounded-md text-emerald-400 hover:bg-emerald-400/10 border border-transparent hover:border-emerald-400/20 transition-colors" title="Approve"><span class="material-symbols-outlined text-xl">check</span></button>
+                            <button onclick="adminSetPostStatus('${post.id}', 'Rejected')" class="p-1.5 rounded-md text-error hover:bg-error/10 border border-transparent hover:border-error/20 transition-colors" title="Reject"><span class="material-symbols-outlined text-xl">close</span></button>
+                            <button onclick="startAdminMessage('${post.id}')" class="p-1.5 rounded-md text-on-surface-variant hover:bg-surface-container-highest border border-transparent hover:border-outline-variant transition-colors" title="Contact"><span class="material-symbols-outlined text-xl">mail</span></button>
+                            <button onclick="openItemModal('${post.id}')" class="p-1.5 rounded-md text-on-surface-variant hover:bg-surface-container-highest border border-transparent hover:border-outline-variant transition-colors" title="View"><span class="material-symbols-outlined text-xl">visibility</span></button>
+                        </div>
+                    `;
+                }
+                
+                const icon = post.type === 'lost' ? 'search' : 'inventory_2';
+                
                 return `
-<tr class="hover:bg-surface-container-highest/30 transition-colors">
-<td class="px-6 py-4 font-medium flex items-center gap-3">
-<div class="w-10 h-10 rounded bg-surface-container-high overflow-hidden">
-<img class="w-full h-full object-cover" src="${post.image}" alt="Item image">
-</div>
-${escapeHtml(post.title)}
-</td>
-<td class="px-6 py-4 text-on-surface-variant">${escapeHtml(category)}</td>
-<td class="px-6 py-4">
-<span class="px-2.5 py-1 text-[10px] font-bold uppercase rounded-full ${badgeClass}">${statusLabel}</span>
-</td>
-<td class="px-6 py-4 text-on-surface-variant">${post.timeAgo}</td>
-<td class="px-6 py-4 text-right">
-<button onclick="alert('Admin Action: Manage Post ID ${post.id}')" class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
-</td>
-</tr>
+                <tr class="hover:bg-surface-container-highest/20 transition-colors ${isHighRisk ? 'bg-error-container/5 border-l-2 border-l-error' : ''}">
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-surface-container-high border border-outline-variant flex items-center justify-center text-on-surface-variant overflow-hidden">
+                                ${post.image ? `<img src="${post.image}" class="w-full h-full object-cover">` : `<span class="material-symbols-outlined text-xl">${icon}</span>`}
+                            </div>
+                            <div><div class="font-medium text-on-surface line-clamp-1 w-48">${escapeHtml(post.title)}</div><div class="text-xs text-on-surface-variant">#${post.id.substring(0, 6)}</div></div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-on-surface-variant">${escapeHtml(category)}</td>
+                    <td class="px-6 py-4"><div class="text-on-surface">@${post.reporterUsername || 'unknown'}</div><div class="font-medium text-sm ${isHighRisk ? 'text-error' : ''}">Active</div></td>
+                    <td class="px-6 py-4">${riskHTML}</td>
+                    <td class="px-6 py-4 text-right">
+                        ${actionsHTML}
+                    </td>
+                </tr>
                 `;
             }).join("");
         }
+
+        // Initialize other tabs
+        if (window.renderAdminUsers) window.renderAdminUsers();
+        if (window.renderAdminModeration) window.renderAdminModeration();
+        if (window.renderAdminReports) window.renderAdminReports();
+        if (window.renderAdminSettings) window.renderAdminSettings();
     }
+
+    /* ----------------------------------------------------
+       ADMIN PANEL LOGIC
+    ---------------------------------------------------- */
+    
+    // --- USERS ---
+    window.renderAdminUsers = async function() {
+        const container = document.getElementById("admin-users-container");
+        if (!container) return;
+        try {
+            const res = await fetch("/api/users");
+            const users = await res.json();
+            
+            container.innerHTML = users.map(user => {
+                const statusColor = user.status === 'Banned' ? 'error' : user.status === 'Suspended' ? 'yellow-400' : 'emerald-400';
+                return `
+                    <div class="bg-surface-container-low border border-outline-variant rounded-xl p-6 flex flex-col gap-4">
+                        <div class="flex items-center gap-4">
+                            <img src="${user.avatar || 'https://via.placeholder.com/150'}" class="w-16 h-16 rounded-full object-cover bg-surface-container-high" />
+                            <div class="flex-1">
+                                <h3 class="font-bold text-lg text-on-surface">${escapeHtml(user.name)} <span class="text-on-surface-variant text-sm font-normal">@${escapeHtml(user.username)}</span></h3>
+                                <p class="text-xs text-on-surface-variant">${escapeHtml(user.email)}</p>
+                                <span class="inline-block mt-1 px-2 py-0.5 text-[10px] font-bold uppercase rounded-full border border-${statusColor}/50 text-${statusColor} bg-${statusColor}/10">${user.status || 'Active'}</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 pt-4 border-t border-outline-variant/30 mt-auto">
+                            <button onclick="adminSetUserStatus('${user.id}', 'Active')" class="flex-1 py-1.5 px-3 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-sm font-medium transition-colors border border-outline-variant">Activate</button>
+                            <button onclick="adminSetUserStatus('${user.id}', 'Suspended')" class="flex-1 py-1.5 px-3 rounded bg-yellow-400/10 hover:bg-yellow-400/20 text-yellow-400 text-sm font-medium transition-colors border border-yellow-400/30">Suspend</button>
+                            <button onclick="adminSetUserStatus('${user.id}', 'Banned')" class="flex-1 py-1.5 px-3 rounded bg-error/10 hover:bg-error/20 text-error text-sm font-medium transition-colors border border-error/30">Ban</button>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+        } catch (err) {
+            console.error("Failed to fetch users", err);
+        }
+    };
+
+    window.adminSetUserStatus = async function(userId, status) {
+        if (!confirm(`Are you sure you want to set this user's status to ${status}?`)) return;
+        try {
+            await fetch(`/api/users/${userId}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status })
+            });
+            showToast(`User status updated to ${status}`);
+            renderAdminUsers(); // refresh
+        } catch (err) {
+            console.error("Update failed", err);
+            showToast("Failed to update status");
+        }
+    };
+
+    // --- MODERATION ---
+    window.renderAdminModeration = async function() {
+        const container = document.getElementById("admin-moderation-container");
+        if (!container) return;
+        
+        container.innerHTML = posts.map(post => {
+            const statusColor = post.status === 'Rejected' ? 'error' : post.status === 'Approved' ? 'emerald-400' : 'on-surface-variant';
+            return `
+                <div class="bg-surface-container-low rounded-xl border border-outline-variant overflow-hidden flex flex-col">
+                    <div class="h-32 bg-surface-container-highest relative">
+                        <img src="${post.image}" class="w-full h-full object-cover" />
+                        <div class="absolute top-2 right-2 bg-surface-container/80 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-on-surface uppercase border border-outline-variant/50">${post.type}</div>
+                    </div>
+                    <div class="p-4 flex flex-col flex-1 gap-2">
+                        <h3 class="font-medium text-on-surface line-clamp-1">${escapeHtml(post.title)}</h3>
+                        <p class="text-xs text-on-surface-variant line-clamp-2">${escapeHtml(post.description)}</p>
+                        <p class="text-xs text-on-surface-variant mt-2 font-semibold">Status: <span class="text-${statusColor}">${post.status || 'Active'}</span></p>
+                        <div class="flex items-center gap-2 pt-4 border-t border-outline-variant/30 mt-auto">
+                            <button onclick="adminSetPostStatus('${post.id}', 'Approved')" class="flex-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs font-bold py-2 rounded transition-colors border border-emerald-500/30">APPROVE</button>
+                            <button onclick="adminSetPostStatus('${post.id}', 'Rejected')" class="flex-1 bg-error/10 hover:bg-error/20 text-error text-xs font-bold py-2 rounded transition-colors border border-error/30">REJECT</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join("");
+    };
+
+    window.adminSetPostStatus = async function(postId, status) {
+        if (!confirm(`Are you sure you want to mark this post as ${status}?`)) return;
+        try {
+            await fetch(`/api/posts/${postId}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status })
+            });
+            showToast(`Post marked as ${status}`);
+            
+            // Update local state
+            const p = posts.find(p => p.id === postId);
+            if (p) p.status = status;
+            setStoredData("findit_posts", posts);
+            
+            renderAdminModeration(); // refresh
+        } catch (err) {
+            console.error("Update failed", err);
+            showToast("Failed to update status");
+        }
+    };
+
+    // --- REPORTS ---
+    window.renderAdminReports = async function() {
+        const container = document.getElementById("admin-reports-container");
+        if (!container) return;
+        try {
+            const res = await fetch("/api/reports");
+            const reports = await res.json();
+            
+            if (reports.length === 0) {
+                container.innerHTML = `<p class="text-on-surface-variant p-6 text-center bg-surface-container-low rounded-xl border border-outline-variant">No reports found.</p>`;
+                return;
+            }
+            
+            container.innerHTML = reports.map(report => `
+                <div class="bg-surface-container-low border border-outline-variant rounded-xl p-5">
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-surface-container-high border border-outline-variant text-on-surface text-[10px] px-2 py-0.5 rounded-full font-bold uppercase">${report.targetType}</span>
+                            <span class="text-on-surface-variant text-xs">ID: ${report.targetId}</span>
+                        </div>
+                        <span class="text-xs font-bold ${report.status === 'Resolved' ? 'text-emerald-400' : 'text-yellow-400'}">${report.status}</span>
+                    </div>
+                    <h4 class="font-medium text-on-surface text-sm mb-1">Reason: ${escapeHtml(report.reason)}</h4>
+                    <p class="text-sm text-on-surface-variant mb-4">${escapeHtml(report.description)}</p>
+                    <div class="text-xs text-on-surface-variant mb-4">Reported by User ID: ${report.reporterId} on ${new Date(report.date).toLocaleDateString()}</div>
+                    <div class="flex gap-2">
+                        <button onclick="adminResolveReport('${report.id}', 'Resolved')" class="px-3 py-1.5 bg-primary/10 text-primary hover:bg-primary/20 text-xs font-bold rounded border border-primary/30 transition-colors">MARK RESOLVED</button>
+                        <button onclick="adminResolveReport('${report.id}', 'Dismissed')" class="px-3 py-1.5 bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-xs font-bold rounded border border-outline-variant transition-colors">DISMISS</button>
+                    </div>
+                </div>
+            `).join("");
+        } catch (err) {
+            console.error("Failed to fetch reports", err);
+        }
+    };
+
+    window.adminResolveReport = async function(reportId, status) {
+        try {
+            await fetch(`/api/reports/${reportId}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status })
+            });
+            showToast(`Report marked as ${status}`);
+            renderAdminReports(); // refresh
+        } catch (err) {
+            console.error("Update failed", err);
+        }
+    };
+
+    // --- ADMIN PROFILE EDIT ---
+    let adminEditAvatarBase64 = null;
+    
+    window.openAdminProfileModal = function() {
+        const modal = document.getElementById("admin-profile-modal");
+        const content = document.getElementById("admin-profile-modal-content");
+        if (!modal || !content) return;
+        
+        // Pre-fill
+        document.getElementById("admin-edit-name").value = profile.name || '';
+        document.getElementById("admin-edit-avatar-preview").src = profile.avatar || 'screen.png';
+        adminEditAvatarBase64 = profile.avatar || null;
+        
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+        setTimeout(() => {
+            content.classList.remove("scale-95", "opacity-0");
+            content.classList.add("scale-100", "opacity-100");
+        }, 10);
+    };
+
+    window.closeAdminProfileModal = function() {
+        const modal = document.getElementById("admin-profile-modal");
+        const content = document.getElementById("admin-profile-modal-content");
+        if (content) {
+            content.classList.remove("scale-100", "opacity-100");
+            content.classList.add("scale-95", "opacity-0");
+        }
+        setTimeout(() => {
+            if (modal) {
+                modal.classList.remove("flex");
+                modal.classList.add("hidden");
+            }
+        }, 300);
+    };
+
+    window.handleAdminAvatarSelect = function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                adminEditAvatarBase64 = e.target.result;
+                document.getElementById("admin-edit-avatar-preview").src = adminEditAvatarBase64;
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    window.saveAdminProfile = async function() {
+        const newName = document.getElementById("admin-edit-name").value.trim();
+        
+        if (!newName) {
+            showToast("Name cannot be empty");
+            return;
+        }
+        
+        try {
+            // Update in backend
+            const res = await fetch(`/api/users/${profile.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: newName, avatar: adminEditAvatarBase64 })
+            });
+            const data = await res.json();
+            
+            if (res.ok) {
+                // Update local state
+                profile.name = newName;
+                if (adminEditAvatarBase64) profile.avatar = adminEditAvatarBase64;
+                
+                // Update local storage
+                localStorage.setItem("findit_current_user", JSON.stringify(profile));
+                
+                // Update UI elements
+                const headerAvatar = document.getElementById("admin-header-avatar");
+                if (headerAvatar && profile.avatar) headerAvatar.src = profile.avatar;
+                
+                const sidebarAvatar = document.getElementById("profile-avatar-img"); // in main app if we return
+                if (sidebarAvatar && profile.avatar) sidebarAvatar.src = profile.avatar;
+                
+                showToast("Admin profile updated successfully");
+                window.closeAdminProfileModal();
+            } else {
+                showToast(data.error || "Failed to update profile");
+            }
+        } catch (err) {
+            console.error(err);
+            showToast("Network error");
+        }
+    };
+
+    // --- SETTINGS ---
+    window.renderAdminSettings = async function() {
+        try {
+            const res = await fetch("/api/settings");
+            const settings = await res.json();
+            
+            // Populate fields if they exist in DB
+            if (settings['system_name']) document.getElementById('setting-system-name').value = settings['system_name'];
+            if (settings['contact_email']) document.getElementById('setting-contact-email').value = settings['contact_email'];
+            if (settings['timezone']) document.getElementById('setting-timezone').value = settings['timezone'];
+            
+            if (settings['spam_val']) {
+                document.getElementById('setting-spam').value = settings['spam_val'];
+                document.getElementById('setting-spam-val').textContent = settings['spam_val'] + '%';
+            }
+            if (settings['nsfw_val']) {
+                document.getElementById('setting-nsfw').value = settings['nsfw_val'];
+                document.getElementById('setting-nsfw-val').textContent = settings['nsfw_val'] + '%';
+            }
+        } catch (err) {
+            console.error("Failed to fetch settings", err);
+        }
+    };
+
+    window.adminSaveSettings = async function() {
+        const sysName = document.getElementById('setting-system-name').value;
+        const email = document.getElementById('setting-contact-email').value;
+        const tz = document.getElementById('setting-timezone').value;
+        const spam = document.getElementById('setting-spam').value;
+        const nsfw = document.getElementById('setting-nsfw').value;
+        
+        try {
+            await Promise.all([
+                fetch('/api/settings', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({key:'system_name', value:sysName}) }),
+                fetch('/api/settings', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({key:'contact_email', value:email}) }),
+                fetch('/api/settings', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({key:'timezone', value:tz}) }),
+                fetch('/api/settings', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({key:'spam_val', value:spam}) }),
+                fetch('/api/settings', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({key:'nsfw_val', value:nsfw}) })
+            ]);
+            showToast("Settings saved successfully");
+        } catch (err) {
+            console.error("Failed to save settings", err);
+            showToast("Failed to save settings");
+        }
+    };
+
+    window.adminSetPostStatus = async function(postId, newStatus) {
+        try {
+            const res = await fetch(`/api/posts/${postId}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            });
+            if (res.ok) {
+                showToast(`Post marked as ${newStatus}`);
+                // Update local array
+                const post = posts.find(p => p.id === postId);
+                if (post) post.status = newStatus;
+                // Re-render
+                renderAdminView();
+                renderFeedView();
+            } else {
+                showToast('Failed to update status.');
+            }
+        } catch (e) {
+            console.error(e);
+            showToast('Error updating status.');
+        }
+    };
 
     /* ----------------------------------------------------
        MESSAGES VIEW
@@ -954,6 +1527,38 @@ ${escapeHtml(post.title)}
         navigateTo("messages");
     };
 
+    window.startAdminMessage = function(postId) {
+        const post = posts.find(p => p.id === postId);
+        if (!post) return;
+        
+        let existing = conversations.find(c => c.participantUsername === post.reporterUsername && c.itemTitle === post.title);
+        if (!existing) {
+            existing = {
+                id: "conv-" + Date.now(),
+                participantName: post.reporterName,
+                participantUsername: post.reporterUsername,
+                participantAvatar: post.reporterAvatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200",
+                itemTitle: post.title,
+                lastMessage: `Official Admin Notice: Regarding your post "${post.title}".`,
+                timeAgo: "Just now",
+                unread: false,
+                messages: [
+                    {
+                        id: "m-start-admin",
+                        sender: profile ? profile.name : "System Admin",
+                        senderType: "me",
+                        text: `OFFICIAL ADMIN NOTICE:\nHi ${post.reporterName}, we are reviewing your post "${post.title}" for potential violations of our terms of service. Please reply to this message with verification if requested.`,
+                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    }
+                ]
+            };
+            conversations.unshift(existing);
+            setStoredData("findit_conversations_v2", conversations);
+        }
+        activeConversationId = existing.id;
+        navigateTo("messages");
+    };
+
     /* ----------------------------------------------------
        ITEM DETAIL MODAL
     ---------------------------------------------------- */
@@ -965,7 +1570,7 @@ ${escapeHtml(post.title)}
         if (!container) return;
 
         const isLost = post.type === "lost";
-        const isOwnPost = post.reporterUsername === profile.username;
+        const isOwnPost = profile && post.reporterUsername === profile.username;
         const badgeClass = isLost ? "bg-error-container text-on-error-container" : "bg-primary-container text-on-primary-container";
 
         const displayAvatar = isOwnPost ? profile.avatar : post.reporterAvatar;
