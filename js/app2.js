@@ -149,7 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // Auth Guard for protected routes
-        const protectedRoutes = ["create", "messages", "profile", "admin"];
+        const protectedRoutes = ["home", "search", "create", "messages", "profile", "admin"];
         if (protectedRoutes.includes(viewName) && !isAuthenticated) {
             navigateTo("login");
             return;
@@ -213,13 +213,25 @@ document.addEventListener("DOMContentLoaded", () => {
         const mainContent = document.getElementById("main-content");
         
         if (viewName === "login" || viewName === "admin" || viewName === "create-account" || viewName === "forgot-password") {
-            if (mobileHeader) mobileHeader.style.display = "none";
-            if (mobileBottomNav) mobileBottomNav.style.display = "none";
+            if (mobileHeader) {
+                mobileHeader.classList.add("!hidden");
+                mobileHeader.style.display = "none";
+            }
+            if (mobileBottomNav) {
+                mobileBottomNav.classList.add("!hidden");
+                mobileBottomNav.style.display = "none";
+            }
             if (desktopSidebar) desktopSidebar.style.display = "none";
             if (mainContent) mainContent.classList.remove("md:pl-64");
         } else {
-            if (mobileHeader) mobileHeader.style.display = "";
-            if (mobileBottomNav) mobileBottomNav.style.display = "";
+            if (mobileHeader) {
+                mobileHeader.classList.remove("!hidden");
+                mobileHeader.style.display = "";
+            }
+            if (mobileBottomNav) {
+                mobileBottomNav.classList.remove("!hidden");
+                mobileBottomNav.style.display = "";
+            }
             if (desktopSidebar) desktopSidebar.style.display = "";
             if (mainContent) mainContent.classList.add("md:pl-64");
         }

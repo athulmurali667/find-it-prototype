@@ -92,7 +92,7 @@
 <body class="bg-background text-on-background antialiased selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col font-body-md">
 
     <!-- TopNavBar (Mobile Only) -->
-    <header id="mobile-header" class="md:hidden bg-surface border-b border-outline-variant sticky top-0 z-40">
+    <header id="mobile-header" class="md:hidden bg-surface border-b border-outline-variant fixed top-0 left-0 w-full z-50">
         <div class="px-margin-mobile h-16 flex items-center justify-between py-sm">
             <div class="flex items-center gap-sm cursor-pointer" onclick="navigateTo('home')">
                 <img alt="Find It Logo" class="w-8 h-8 rounded-lg object-cover" src="screen.png"/>
@@ -168,7 +168,7 @@
     </nav>
 
     <!-- Main Content Container -->
-    <main id="main-content" class="flex-grow w-full md:pl-64 transition-all duration-300 pb-20 md:pb-0">
+    <main id="main-content" class="flex-grow w-full md:pl-64 transition-all duration-300 pt-16 md:pt-0 pb-20 md:pb-0">
 
         <!-- ==================== 0. LOGIN VIEW ==================== -->
         <div id="view-login" class="view-section hidden min-h-screen flex items-center justify-center py-xl px-margin-mobile">
